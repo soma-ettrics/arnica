@@ -2,9 +2,9 @@ import gsap from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
 
 export default function autoTab() {
+
 // Auto tab for multiple tab menus with GSAP ScrollTrigger integration
-var Webflow = Webflow || [];
-Webflow.push(function () {
+
   // Initialize GSAP and ScrollTrigger animations
   gsap.registerPlugin(ScrollTrigger);
 
@@ -123,6 +123,4 @@ Webflow.push(function () {
   $(".tab-hor_component").each(function () {
     createTabLoop($(this));
   });
-});
-
 }

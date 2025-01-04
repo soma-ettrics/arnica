@@ -45,7 +45,3 @@ const initializePageScripts = () => {
 
 // Execute page-specific scripts
 initializePageScripts();
-
-// TODO: Import and register GSAP plugins in the relevant function files
-// import { ScrollTrigger } from 'gsap/ScrollTrigger';
-// gsap.registerPlugin(ScrollTrigger, Flip);

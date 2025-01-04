@@ -654,9 +654,7 @@ const initializePageScripts = ()=>{
     });
 };
 // Execute page-specific scripts
-initializePageScripts(); // TODO: Import and register GSAP plugins in the relevant function files
- // import { ScrollTrigger } from 'gsap/ScrollTrigger';
- // gsap.registerPlugin(ScrollTrigger, Flip);
+initializePageScripts();
 
 },{"./src/styles/style.css":"cy7Le","./src/global/nav":"9emQb","./src/global/footer":"3EEbG","./src/pages/home/home":"cIPEi","./src/pages/about/about":"fL9gf","./src/pages/work/work":"9nfro","./src/pages/services/services":"gjwHc","./src/pages/career/career":"erAwr","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"cy7Le":[function() {},{}],"9emQb":[function(require,module,exports,__globalThis) {
 // jQuery test
@@ -726,106 +724,103 @@ var _scrollTrigger = require("gsap/ScrollTrigger");
 var _scrollTriggerDefault = parcelHelpers.interopDefault(_scrollTrigger);
 function autoTab() {
     // Auto tab for multiple tab menus with GSAP ScrollTrigger integration
-    var Webflow = Webflow || [];
-    Webflow.push(function() {
-        // Initialize GSAP and ScrollTrigger animations
-        (0, _gsapDefault.default).registerPlugin((0, _scrollTriggerDefault.default));
-        // Function to create a tab loop with GSAP animations for a specific component
-        function createTabLoop($component) {
-            var tabTimeout;
-            var isPaused = false;
-            var $tabMenu = $component.find(".w-tab-menu");
-            // Initial GSAP setup for all progress bars
-            $component.find(".tab-hor_progress").each(function() {
-                (0, _gsapDefault.default).set(this, {
-                    xPercent: -100
-                });
+    // Initialize GSAP and ScrollTrigger animations
+    (0, _gsapDefault.default).registerPlugin((0, _scrollTriggerDefault.default));
+    // Function to create a tab loop with GSAP animations for a specific component
+    function createTabLoop($component) {
+        var tabTimeout;
+        var isPaused = false;
+        var $tabMenu = $component.find(".w-tab-menu");
+        // Initial GSAP setup for all progress bars
+        $component.find(".tab-hor_progress").each(function() {
+            (0, _gsapDefault.default).set(this, {
+                xPercent: -100
             });
-            function playProgressAnimation($tab) {
-                const $progress = $tab.find(".tab-hor_progress");
-                (0, _gsapDefault.default).to($progress, {
-                    xPercent: 0,
-                    duration: 7,
-                    ease: "linear"
-                });
-            }
-            function resetProgressAnimation($tab) {
-                const $progress = $tab.find(".tab-hor_progress");
-                (0, _gsapDefault.default).to($progress, {
-                    xPercent: -100,
-                    duration: 0
-                });
-            }
-            function tabLoop() {
-                clearTimeout(tabTimeout);
-                if (!isPaused) tabTimeout = setTimeout(function() {
-                    var $currentTab = $tabMenu.children(".w--current:first");
-                    var $next = $currentTab.next();
-                    // Reset progress for all tabs except the next one
-                    $tabMenu.find(".w-tab-link").each(function() {
-                        resetProgressAnimation($(this));
-                    });
-                    if ($next.length) {
-                        resetProgressAnimation($currentTab);
-                        $next.removeAttr("href").click();
-                    } else {
-                        var $firstTab = $tabMenu.find(".w-tab-link:first");
-                        resetProgressAnimation($currentTab);
-                        $firstTab.removeAttr("href").click();
-                    }
-                }, 7000); // 7 seconds
-            }
-            // ScrollTrigger to start the tab loop and progress animations on scroll
-            (0, _scrollTriggerDefault.default).create({
-                trigger: $component[0],
-                start: "top 80%",
-                end: "bottom 20%",
-                onEnter: ()=>{
-                    tabLoop(); // Start the loop
-                    // Play the progress animation for the first tab
-                    const $firstTab = $tabMenu.find(".w-tab-link:first");
-                    playProgressAnimation($firstTab);
-                },
-                onLeaveBack: ()=>{
-                    // Reset all animations when scrolling out of view
-                    clearTimeout(tabTimeout);
-                    $tabMenu.find(".w-tab-link").each(function() {
-                        resetProgressAnimation($(this));
-                    });
-                }
-            });
-            // When a tab is clicked, reset the timeout and play the progress animation
-            $tabMenu.find(".w-tab-link").click(function() {
-                clearTimeout(tabTimeout);
-                tabLoop();
-                const $clickedTab = $(this);
-                // Reset progress for all tabs except the clicked one
-                $tabMenu.find(".w-tab-link").each(function() {
-                    if (!$(this).is($clickedTab)) resetProgressAnimation($(this));
-                });
-                // Play animation for the clicked tab
-                playProgressAnimation($clickedTab);
-            });
-            // Pause on hover over tab menu item
-            $tabMenu.find(".tab-hor_menu-item").hover(function() {
-                // Mouse enter
-                isPaused = true;
-                clearTimeout(tabTimeout);
-                // Pause GSAP animation for the hovered tab
-                const $hoveredTab = $(this).closest(".w-tab-link");
-                (0, _gsapDefault.default).globalTimeline.pause();
-            }, function() {
-                // Mouse leave
-                isPaused = false;
-                tabLoop();
-                // Resume GSAP animation
-                (0, _gsapDefault.default).globalTimeline.resume();
+        });
+        function playProgressAnimation($tab) {
+            const $progress = $tab.find(".tab-hor_progress");
+            (0, _gsapDefault.default).to($progress, {
+                xPercent: 0,
+                duration: 7,
+                ease: "linear"
             });
         }
-        // Apply the tab loop to each .tab-hor_component
-        $(".tab-hor_component").each(function() {
-            createTabLoop($(this));
+        function resetProgressAnimation($tab) {
+            const $progress = $tab.find(".tab-hor_progress");
+            (0, _gsapDefault.default).to($progress, {
+                xPercent: -100,
+                duration: 0
+            });
+        }
+        function tabLoop() {
+            clearTimeout(tabTimeout);
+            if (!isPaused) tabTimeout = setTimeout(function() {
+                var $currentTab = $tabMenu.children(".w--current:first");
+                var $next = $currentTab.next();
+                // Reset progress for all tabs except the next one
+                $tabMenu.find(".w-tab-link").each(function() {
+                    resetProgressAnimation($(this));
+                });
+                if ($next.length) {
+                    resetProgressAnimation($currentTab);
+                    $next.removeAttr("href").click();
+                } else {
+                    var $firstTab = $tabMenu.find(".w-tab-link:first");
+                    resetProgressAnimation($currentTab);
+                    $firstTab.removeAttr("href").click();
+                }
+            }, 7000); // 7 seconds
+        }
+        // ScrollTrigger to start the tab loop and progress animations on scroll
+        (0, _scrollTriggerDefault.default).create({
+            trigger: $component[0],
+            start: "top 80%",
+            end: "bottom 20%",
+            onEnter: ()=>{
+                tabLoop(); // Start the loop
+                // Play the progress animation for the first tab
+                const $firstTab = $tabMenu.find(".w-tab-link:first");
+                playProgressAnimation($firstTab);
+            },
+            onLeaveBack: ()=>{
+                // Reset all animations when scrolling out of view
+                clearTimeout(tabTimeout);
+                $tabMenu.find(".w-tab-link").each(function() {
+                    resetProgressAnimation($(this));
+                });
+            }
         });
+        // When a tab is clicked, reset the timeout and play the progress animation
+        $tabMenu.find(".w-tab-link").click(function() {
+            clearTimeout(tabTimeout);
+            tabLoop();
+            const $clickedTab = $(this);
+            // Reset progress for all tabs except the clicked one
+            $tabMenu.find(".w-tab-link").each(function() {
+                if (!$(this).is($clickedTab)) resetProgressAnimation($(this));
+            });
+            // Play animation for the clicked tab
+            playProgressAnimation($clickedTab);
+        });
+        // Pause on hover over tab menu item
+        $tabMenu.find(".tab-hor_menu-item").hover(function() {
+            // Mouse enter
+            isPaused = true;
+            clearTimeout(tabTimeout);
+            // Pause GSAP animation for the hovered tab
+            const $hoveredTab = $(this).closest(".w-tab-link");
+            (0, _gsapDefault.default).globalTimeline.pause();
+        }, function() {
+            // Mouse leave
+            isPaused = false;
+            tabLoop();
+            // Resume GSAP animation
+            (0, _gsapDefault.default).globalTimeline.resume();
+        });
+    }
+    // Apply the tab loop to each .tab-hor_component
+    $(".tab-hor_component").each(function() {
+        createTabLoop($(this));
     });
 }
 

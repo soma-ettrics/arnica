@@ -2,7 +2,7 @@ import autoTab from "./autotab"
 
 function home()
 {
-  autoTab();
+    autoTab();
 }
 
 export default home
