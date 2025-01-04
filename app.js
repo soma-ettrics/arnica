@@ -13,10 +13,6 @@ alert('Your Parcel.js based Webflow development environment is up and running! ð
 // Import custom styles
 import "./src/styles/style.css";
 
-// Import global scripts
-import initLenis from "./src/global/lenis";
-initLenis();
-
 import nav from "./src/global/nav";
 nav();
 
