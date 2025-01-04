@@ -73,7 +73,7 @@
         localRequire,
         module,
         module.exports,
-        this
+        globalObject
       );
     }
 
@@ -142,7 +142,7 @@
       this[globalName] = mainExports;
     }
   }
-})({"7XE4H":[function(require,module,exports) {
+})({"jQqog":[function(require,module,exports,__globalThis) {
 var global = arguments[3];
 var HMR_HOST = null;
 var HMR_PORT = 50619;
@@ -197,7 +197,7 @@ declare var __parcel__import__: (string) => Promise<void>;
 declare var __parcel__importScripts__: (string) => Promise<void>;
 declare var globalThis: typeof self;
 declare var ServiceWorkerGlobalScope: Object;
-*/ var OVERLAY_ID = "__parcel__error__overlay__";
+*/ var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
 function Module(moduleName) {
     OldModule.call(this, moduleName);
@@ -216,71 +216,65 @@ function Module(moduleName) {
 }
 module.bundle.Module = Module;
 module.bundle.hotData = {};
-var checkedAssets /*: {|[string]: boolean|} */ , assetsToDispose /*: Array<[ParcelRequire, string]> */ , assetsToAccept /*: Array<[ParcelRequire, string]> */ ;
+var checkedAssets /*: {|[string]: boolean|} */ , disposedAssets /*: {|[string]: boolean|} */ , assetsToDispose /*: Array<[ParcelRequire, string]> */ , assetsToAccept /*: Array<[ParcelRequire, string]> */ ;
 function getHostname() {
-    return HMR_HOST || (location.protocol.indexOf("http") === 0 ? location.hostname : "localhost");
+    return HMR_HOST || (location.protocol.indexOf('http') === 0 ? location.hostname : 'localhost');
 }
 function getPort() {
     return HMR_PORT || location.port;
 }
 // eslint-disable-next-line no-redeclare
 var parent = module.bundle.parent;
-if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== "undefined") {
+if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
     var hostname = getHostname();
     var port = getPort();
-    var protocol = HMR_SECURE || location.protocol == "https:" && ![
-        "localhost",
-        "127.0.0.1",
-        "0.0.0.0"
-    ].includes(hostname) ? "wss" : "ws";
+    var protocol = HMR_SECURE || location.protocol == 'https:' && ![
+        'localhost',
+        '127.0.0.1',
+        '0.0.0.0'
+    ].includes(hostname) ? 'wss' : 'ws';
     var ws;
-    if (HMR_USE_SSE) ws = new EventSource("/__parcel_hmr");
+    if (HMR_USE_SSE) ws = new EventSource('/__parcel_hmr');
     else try {
-        ws = new WebSocket(protocol + "://" + hostname + (port ? ":" + port : "") + "/");
+        ws = new WebSocket(protocol + '://' + hostname + (port ? ':' + port : '') + '/');
     } catch (err) {
         if (err.message) console.error(err.message);
         ws = {};
     }
     // Web extension context
-    var extCtx = typeof browser === "undefined" ? typeof chrome === "undefined" ? null : chrome : browser;
+    var extCtx = typeof browser === 'undefined' ? typeof chrome === 'undefined' ? null : chrome : browser;
     // Safari doesn't support sourceURL in error stacks.
     // eval may also be disabled via CSP, so do a quick check.
     var supportsSourceURL = false;
     try {
         (0, eval)('throw new Error("test"); //# sourceURL=test.js');
     } catch (err) {
-        supportsSourceURL = err.stack.includes("test.js");
+        supportsSourceURL = err.stack.includes('test.js');
     }
     // $FlowFixMe
     ws.onmessage = async function(event /*: {data: string, ...} */ ) {
         checkedAssets = {} /*: {|[string]: boolean|} */ ;
+        disposedAssets = {} /*: {|[string]: boolean|} */ ;
         assetsToAccept = [];
         assetsToDispose = [];
         var data /*: HMRMessage */  = JSON.parse(event.data);
-        if (data.type === "update") {
+        if (data.type === 'reload') fullReload();
+        else if (data.type === 'update') {
             // Remove error overlay if there is one
-            if (typeof document !== "undefined") removeErrorOverlay();
+            if (typeof document !== 'undefined') removeErrorOverlay();
             let assets = data.assets.filter((asset)=>asset.envHash === HMR_ENV_HASH);
             // Handle HMR Update
             let handled = assets.every((asset)=>{
-                return asset.type === "css" || asset.type === "js" && hmrAcceptCheck(module.bundle.root, asset.id, asset.depsByBundle);
+                return asset.type === 'css' || asset.type === 'js' && hmrAcceptCheck(module.bundle.root, asset.id, asset.depsByBundle);
             });
             if (handled) {
                 console.clear();
                 // Dispatch custom event so other runtimes (e.g React Refresh) are aware.
-                if (typeof window !== "undefined" && typeof CustomEvent !== "undefined") window.dispatchEvent(new CustomEvent("parcelhmraccept"));
+                if (typeof window !== 'undefined' && typeof CustomEvent !== 'undefined') window.dispatchEvent(new CustomEvent('parcelhmraccept'));
                 await hmrApplyUpdates(assets);
-                // Dispose all old assets.
-                let processedAssets = {} /*: {|[string]: boolean|} */ ;
-                for(let i = 0; i < assetsToDispose.length; i++){
-                    let id = assetsToDispose[i][1];
-                    if (!processedAssets[id]) {
-                        hmrDispose(assetsToDispose[i][0], id);
-                        processedAssets[id] = true;
-                    }
-                }
+                hmrDisposeQueue();
                 // Run accept callbacks. This will also re-execute other disposed assets in topological order.
-                processedAssets = {};
+                let processedAssets = {};
                 for(let i = 0; i < assetsToAccept.length; i++){
                     let id = assetsToAccept[i][1];
                     if (!processedAssets[id]) {
@@ -290,13 +284,13 @@ if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== "undefined") {
                 }
             } else fullReload();
         }
-        if (data.type === "error") {
+        if (data.type === 'error') {
             // Log parcel errors to console
             for (let ansiDiagnostic of data.diagnostics.ansi){
                 let stack = ansiDiagnostic.codeframe ? ansiDiagnostic.codeframe : ansiDiagnostic.stack;
-                console.error("\uD83D\uDEA8 [parcel]: " + ansiDiagnostic.message + "\n" + stack + "\n\n" + ansiDiagnostic.hints.join("\n"));
+                console.error("\uD83D\uDEA8 [parcel]: " + ansiDiagnostic.message + '\n' + stack + '\n\n' + ansiDiagnostic.hints.join('\n'));
             }
-            if (typeof document !== "undefined") {
+            if (typeof document !== 'undefined') {
                 // Render the fancy html overlay
                 removeErrorOverlay();
                 var overlay = createErrorOverlay(data.diagnostics.html);
@@ -322,7 +316,7 @@ function removeErrorOverlay() {
     }
 }
 function createErrorOverlay(diagnostics) {
-    var overlay = document.createElement("div");
+    var overlay = document.createElement('div');
     overlay.id = OVERLAY_ID;
     let errorHTML = '<div style="background: black; opacity: 0.85; font-size: 16px; color: white; position: fixed; height: 100%; width: 100%; top: 0px; left: 0px; padding: 30px; font-family: Menlo, Consolas, monospace; z-index: 9999;">';
     for (let diagnostic of diagnostics){
@@ -330,7 +324,7 @@ function createErrorOverlay(diagnostics) {
             return `${p}
 <a href="/__parcel_launch_editor?file=${encodeURIComponent(frame.location)}" style="text-decoration: underline; color: #888" onclick="fetch(this.href); return false">${frame.location}</a>
 ${frame.code}`;
-        }, "") : diagnostic.stack;
+        }, '') : diagnostic.stack;
         errorHTML += `
       <div>
         <div style="font-size: 18px; font-weight: bold; margin-top: 20px;">
@@ -338,18 +332,18 @@ ${frame.code}`;
         </div>
         <pre>${stack}</pre>
         <div>
-          ${diagnostic.hints.map((hint)=>"<div>\uD83D\uDCA1 " + hint + "</div>").join("")}
+          ${diagnostic.hints.map((hint)=>"<div>\uD83D\uDCA1 " + hint + '</div>').join('')}
         </div>
-        ${diagnostic.documentation ? `<div>\u{1F4DD} <a style="color: violet" href="${diagnostic.documentation}" target="_blank">Learn more</a></div>` : ""}
+        ${diagnostic.documentation ? `<div>\u{1F4DD} <a style="color: violet" href="${diagnostic.documentation}" target="_blank">Learn more</a></div>` : ''}
       </div>
     `;
     }
-    errorHTML += "</div>";
+    errorHTML += '</div>';
     overlay.innerHTML = errorHTML;
     return overlay;
 }
 function fullReload() {
-    if ("reload" in location) location.reload();
+    if ('reload' in location) location.reload();
     else if (extCtx && extCtx.runtime && extCtx.runtime.reload) extCtx.runtime.reload();
 }
 function getParents(bundle, id) /*: Array<[ParcelRequire, string]> */ {
@@ -368,15 +362,15 @@ function getParents(bundle, id) /*: Array<[ParcelRequire, string]> */ {
     return parents;
 }
 function updateLink(link) {
-    var href = link.getAttribute("href");
+    var href = link.getAttribute('href');
     if (!href) return;
     var newLink = link.cloneNode();
     newLink.onload = function() {
         if (link.parentNode !== null) // $FlowFixMe
         link.parentNode.removeChild(link);
     };
-    newLink.setAttribute("href", // $FlowFixMe
-    href.split("?")[0] + "?" + Date.now());
+    newLink.setAttribute('href', // $FlowFixMe
+    href.split('?')[0] + '?' + Date.now());
     // $FlowFixMe
     link.parentNode.insertBefore(newLink, link.nextSibling);
 }
@@ -387,9 +381,9 @@ function reloadCSS() {
         var links = document.querySelectorAll('link[rel="stylesheet"]');
         for(var i = 0; i < links.length; i++){
             // $FlowFixMe[incompatible-type]
-            var href /*: string */  = links[i].getAttribute("href");
+            var href /*: string */  = links[i].getAttribute('href');
             var hostname = getHostname();
-            var servedFromHMRServer = hostname === "localhost" ? new RegExp("^(https?:\\/\\/(0.0.0.0|127.0.0.1)|localhost):" + getPort()).test(href) : href.indexOf(hostname + ":" + getPort());
+            var servedFromHMRServer = hostname === 'localhost' ? new RegExp('^(https?:\\/\\/(0.0.0.0|127.0.0.1)|localhost):' + getPort()).test(href) : href.indexOf(hostname + ':' + getPort());
             var absolute = /^https?:\/\//i.test(href) && href.indexOf(location.origin) !== 0 && !servedFromHMRServer;
             if (!absolute) updateLink(links[i]);
         }
@@ -397,23 +391,23 @@ function reloadCSS() {
     }, 50);
 }
 function hmrDownload(asset) {
-    if (asset.type === "js") {
-        if (typeof document !== "undefined") {
-            let script = document.createElement("script");
-            script.src = asset.url + "?t=" + Date.now();
-            if (asset.outputFormat === "esmodule") script.type = "module";
+    if (asset.type === 'js') {
+        if (typeof document !== 'undefined') {
+            let script = document.createElement('script');
+            script.src = asset.url + '?t=' + Date.now();
+            if (asset.outputFormat === 'esmodule') script.type = 'module';
             return new Promise((resolve, reject)=>{
                 var _document$head;
                 script.onload = ()=>resolve(script);
                 script.onerror = reject;
                 (_document$head = document.head) === null || _document$head === void 0 || _document$head.appendChild(script);
             });
-        } else if (typeof importScripts === "function") {
+        } else if (typeof importScripts === 'function') {
             // Worker scripts
-            if (asset.outputFormat === "esmodule") return import(asset.url + "?t=" + Date.now());
+            if (asset.outputFormat === 'esmodule') return import(asset.url + '?t=' + Date.now());
             else return new Promise((resolve, reject)=>{
                 try {
-                    importScripts(asset.url + "?t=" + Date.now());
+                    importScripts(asset.url + '?t=' + Date.now());
                     resolve();
                 } catch (err) {
                     reject(err);
@@ -437,7 +431,7 @@ async function hmrApplyUpdates(assets) {
                 var _hmrDownload;
                 return (_hmrDownload = hmrDownload(asset)) === null || _hmrDownload === void 0 ? void 0 : _hmrDownload.catch((err)=>{
                     // Web extension fix
-                    if (extCtx && extCtx.runtime && extCtx.runtime.getManifest().manifest_version == 3 && typeof ServiceWorkerGlobalScope != "undefined" && global instanceof ServiceWorkerGlobalScope) {
+                    if (extCtx && extCtx.runtime && extCtx.runtime.getManifest().manifest_version == 3 && typeof ServiceWorkerGlobalScope != 'undefined' && global instanceof ServiceWorkerGlobalScope) {
                         extCtx.runtime.reload();
                         return;
                     }
@@ -462,8 +456,8 @@ async function hmrApplyUpdates(assets) {
 function hmrApply(bundle /*: ParcelRequire */ , asset /*:  HMRAsset */ ) {
     var modules = bundle.modules;
     if (!modules) return;
-    if (asset.type === "css") reloadCSS();
-    else if (asset.type === "js") {
+    if (asset.type === 'css') reloadCSS();
+    else if (asset.type === 'js') {
         let deps = asset.depsByBundle[bundle.HMR_BUNDLE_ID];
         if (deps) {
             if (modules[asset.id]) {
@@ -485,7 +479,10 @@ function hmrApply(bundle /*: ParcelRequire */ , asset /*:  HMRAsset */ ) {
                 fn,
                 deps
             ];
-        } else if (bundle.parent) hmrApply(bundle.parent, asset);
+        }
+        // Always traverse to the parent bundle, even if we already replaced the asset in this bundle.
+        // This is required in case modules are duplicated. We need to ensure all instances have the updated code.
+        if (bundle.parent) hmrApply(bundle.parent, asset);
     }
 }
 function hmrDelete(bundle, id) {
@@ -555,6 +552,17 @@ function hmrAcceptCheckOne(bundle /*: ParcelRequire */ , id /*: string */ , deps
         return true;
     }
 }
+function hmrDisposeQueue() {
+    // Dispose all old assets.
+    for(let i = 0; i < assetsToDispose.length; i++){
+        let id = assetsToDispose[i][1];
+        if (!disposedAssets[id]) {
+            hmrDispose(assetsToDispose[i][0], id);
+            disposedAssets[id] = true;
+        }
+    }
+    assetsToDispose = [];
+}
 function hmrDispose(bundle /*: ParcelRequire */ , id /*: string */ ) {
     var cached = bundle.cache[id];
     bundle.hotData[id] = {};
@@ -569,32 +577,36 @@ function hmrAccept(bundle /*: ParcelRequire */ , id /*: string */ ) {
     bundle(id);
     // Run the accept callbacks in the new version of the module.
     var cached = bundle.cache[id];
-    if (cached && cached.hot && cached.hot._acceptCallbacks.length) cached.hot._acceptCallbacks.forEach(function(cb) {
-        var assetsToAlsoAccept = cb(function() {
-            return getParents(module.bundle.root, id);
-        });
-        if (assetsToAlsoAccept && assetsToAccept.length) {
-            assetsToAlsoAccept.forEach(function(a) {
-                hmrDispose(a[0], a[1]);
+    if (cached && cached.hot && cached.hot._acceptCallbacks.length) {
+        let assetsToAlsoAccept = [];
+        cached.hot._acceptCallbacks.forEach(function(cb) {
+            let additionalAssets = cb(function() {
+                return getParents(module.bundle.root, id);
             });
-            // $FlowFixMe[method-unbinding]
-            assetsToAccept.push.apply(assetsToAccept, assetsToAlsoAccept);
+            if (Array.isArray(additionalAssets) && additionalAssets.length) assetsToAlsoAccept.push(...additionalAssets);
+        });
+        if (assetsToAlsoAccept.length) {
+            let handled = assetsToAlsoAccept.every(function(a) {
+                return hmrAcceptCheck(a[0], a[1]);
+            });
+            if (!handled) return fullReload();
+            hmrDisposeQueue();
         }
-    });
+    }
 }
 
-},{}],"igcvL":[function(require,module,exports) {
-// █▀▀ █░░ █░█ █ █▀▄   █░█░█ █▀▀ █▄▄ █▀▀ █░░ █▀█ █░█░█   ░░█ █▀
-// █▀░ █▄▄ █▄█ █ █▄▀   ▀▄▀▄▀ ██▄ █▄█ █▀░ █▄▄ █▄█ ▀▄▀▄▀   █▄█ ▄█
-// █▀ ▀█▀ ▄▀█ █▀█ ▀█▀ █▀▀ █▀█   ▀█▀ █▀▀ █▀▄▀█ █▀█ █░░ ▄▀█ ▀█▀ █▀▀
-// ▄█ ░█░ █▀█ █▀▄ ░█░ ██▄ █▀▄   ░█░ ██▄ █░▀░█ █▀▀ █▄▄ █▀█ ░█░ ██▄
-// Variable for checking if dev server is running
+},{}],"igcvL":[function(require,module,exports,__globalThis) {
+/**
+  * █▀▀ █░░ █░█ █ █▀▄   █░█░█ █▀▀ █▄▄ █▀▀ █░░ █▀█ █░█░█   ░░█ █▀
+  * █▀░ █▄▄ █▄█ █ █▄▀   ▀▄▀▄▀ ██▄ █▄█ █▀░ █▄▄ █▄█ ▀▄▀▄▀   █▄█ ▄█
+  * █▀ ▀█▀ ▄▀█ █▀█ ▀█▀ █▀▀ █▀█   ▀█▀ █▀▀ █▀▄▀█ █▀█ █░░ ▄▀█ ▀█▀ █▀▀
+  * ▄█ ░█░ █▀█ █▀▄ ░█░ ██▄ █▀▄   ░█░ ██▄ █░▀░█ █▀▀ █▄▄ █▀█ ░█░ ██▄
+*/ // Variable for checking if dev server is running
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+// Initialize Parcel.js with Webflow | Don't forget to delete or comment this line after project setup! ;) 
+//alert('Your Parcel.js based Webflow development environment is up and running! 👍');
 // Import custom styles
 var _styleCss = require("./src/styles/style.css");
-// Import global scripts
-var _lenis = require("./src/global/lenis");
-var _lenisDefault = parcelHelpers.interopDefault(_lenis);
 var _nav = require("./src/global/nav");
 var _navDefault = parcelHelpers.interopDefault(_nav);
 var _footer = require("./src/global/footer");
@@ -611,37 +623,34 @@ var _servicesDefault = parcelHelpers.interopDefault(_services);
 var _career = require("./src/pages/career/career");
 var _careerDefault = parcelHelpers.interopDefault(_career);
 const parceled = true;
-// Initialize Parcel.js with Webflow | Don't forget to delete or comment this line after project setup! ;) 
-alert("Your Parcel.js based Webflow development environment is up and running! \uD83D\uDC4D");
-(0, _lenisDefault.default)();
 (0, _navDefault.default)();
 (0, _footerDefault.default)();
 // Function to initialize page-specific scripts
 const initializePageScripts = ()=>{
     const pages = [
         {
-            className: "body--home",
+            className: 'body--home',
             initFunction: (0, _homeDefault.default)
         },
         {
-            className: "body--about",
+            className: 'body--about',
             initFunction: (0, _aboutDefault.default)
         },
         {
-            className: "body--work",
+            className: 'body--work',
             initFunction: (0, _workDefault.default)
         },
         {
-            className: "body--services",
+            className: 'body--services',
             initFunction: (0, _servicesDefault.default)
         },
         {
-            className: "body--career",
+            className: 'body--career',
             initFunction: (0, _careerDefault.default)
         }
     ];
     pages.forEach((page)=>{
-        if (document.querySelector("body").classList.contains(page.className)) page.initFunction();
+        if (document.querySelector('body').classList.contains(page.className)) page.initFunction();
     });
 };
 // Execute page-specific scripts
@@ -649,409 +658,31 @@ initializePageScripts(); // TODO: Import and register GSAP plugins in the releva
  // import { ScrollTrigger } from 'gsap/ScrollTrigger';
  // gsap.registerPlugin(ScrollTrigger, Flip);
 
-},{"./src/styles/style.css":"cy7Le","./src/global/lenis":"gPIwU","./src/pages/home/home":"cIPEi","./src/pages/about/about":"fL9gf","./src/pages/work/work":"9nfro","./src/pages/services/services":"gjwHc","./src/pages/career/career":"erAwr","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./src/global/nav":"9emQb","./src/global/footer":"3EEbG"}],"cy7Le":[function() {},{}],"gPIwU":[function(require,module,exports) {
+},{"./src/styles/style.css":"cy7Le","./src/global/nav":"9emQb","./src/global/footer":"3EEbG","./src/pages/home/home":"cIPEi","./src/pages/about/about":"fL9gf","./src/pages/work/work":"9nfro","./src/pages/services/services":"gjwHc","./src/pages/career/career":"erAwr","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"cy7Le":[function() {},{}],"9emQb":[function(require,module,exports,__globalThis) {
+// jQuery test
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
-var _lenis = require("@studio-freight/lenis"); // TODO Add lenis smooth scrolling 
-var _lenisDefault = parcelHelpers.interopDefault(_lenis);
-// Lenis SmoothScroll
-function initLenis() {
-    "use strict"; // fix lenis in safari
-    if (Webflow.env("editor") === undefined) {
-        const lenis = new (0, _lenisDefault.default)({
-            lerp: 0.1,
-            wheelMultiplier: 1,
-            infinite: false,
-            gestureOrientation: "vertical",
-            normalizeWheel: false,
-            smoothTouch: false
-        });
-        function raf(time) {
-            lenis.raf(time);
-            requestAnimationFrame(raf);
-        }
-        requestAnimationFrame(raf);
-        $("[data-lenis-start]").on("click", function() {
-            lenis.start();
-        });
-        $("[data-lenis-stop]").on("click", function() {
-            lenis.stop();
-        });
-        $("[data-lenis-toggle]").on("click", function() {
-            $(this).toggleClass("stop-scroll");
-            if ($(this).hasClass("stop-scroll")) lenis.stop();
-            else lenis.start();
-        });
-        function connectToScrollTrigger() {
-            lenis.on("scroll", ScrollTrigger.update);
-            gsap.ticker.add((time)=>{
-                lenis.raf(time * 1000);
-            });
-        }
-    // Uncomment this if using GSAP ScrollTrigger
-    // connectToScrollTrigger();
-    }
+function nav() {
+    $('.nav_description').on('click', function() {
+        $(this).toggleClass('is-test');
+    });
 }
-exports.default = initLenis;
+exports.default = nav;
 
-},{"@studio-freight/lenis":"ggVJc","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"ggVJc":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "default", ()=>Lenis);
-function t(t, e, i) {
-    return Math.max(t, Math.min(e, i));
-}
-class Animate {
-    advance(e) {
-        if (!this.isRunning) return;
-        let i = !1;
-        if (this.lerp) this.value = (s = this.value, o = this.to, n = 60 * this.lerp, r = e, function(t, e, i) {
-            return (1 - i) * t + i * e;
-        }(s, o, 1 - Math.exp(-n * r))), Math.round(this.value) === this.to && (this.value = this.to, i = !0);
-        else {
-            this.currentTime += e;
-            const s = t(0, this.currentTime / this.duration, 1);
-            i = s >= 1;
-            const o = i ? 1 : this.easing(s);
-            this.value = this.from + (this.to - this.from) * o;
-        }
-        var s, o, n, r;
-        this.onUpdate?.(this.value, i), i && this.stop();
-    }
-    stop() {
-        this.isRunning = !1;
-    }
-    fromTo(t, e, { lerp: i = .1, duration: s = 1, easing: o = (t)=>t, onStart: n, onUpdate: r }) {
-        this.from = this.value = t, this.to = e, this.lerp = i, this.duration = s, this.easing = o, this.currentTime = 0, this.isRunning = !0, n?.(), this.onUpdate = r;
-    }
-}
-class Dimensions {
-    constructor({ wrapper: t, content: e, autoResize: i = !0, debounce: s = 250 } = {}){
-        this.wrapper = t, this.content = e, i && (this.debouncedResize = function(t, e) {
-            let i;
-            return function() {
-                let s = arguments, o = this;
-                clearTimeout(i), i = setTimeout(function() {
-                    t.apply(o, s);
-                }, e);
-            };
-        }(this.resize, s), this.wrapper === window ? window.addEventListener("resize", this.debouncedResize, !1) : (this.wrapperResizeObserver = new ResizeObserver(this.debouncedResize), this.wrapperResizeObserver.observe(this.wrapper)), this.contentResizeObserver = new ResizeObserver(this.debouncedResize), this.contentResizeObserver.observe(this.content)), this.resize();
-    }
-    destroy() {
-        this.wrapperResizeObserver?.disconnect(), this.contentResizeObserver?.disconnect(), window.removeEventListener("resize", this.debouncedResize, !1);
-    }
-    resize = ()=>{
-        this.onWrapperResize(), this.onContentResize();
-    };
-    onWrapperResize = ()=>{
-        this.wrapper === window ? (this.width = window.innerWidth, this.height = window.innerHeight) : (this.width = this.wrapper.clientWidth, this.height = this.wrapper.clientHeight);
-    };
-    onContentResize = ()=>{
-        this.wrapper === window ? (this.scrollHeight = this.content.scrollHeight, this.scrollWidth = this.content.scrollWidth) : (this.scrollHeight = this.wrapper.scrollHeight, this.scrollWidth = this.wrapper.scrollWidth);
-    };
-    get limit() {
-        return {
-            x: this.scrollWidth - this.width,
-            y: this.scrollHeight - this.height
-        };
-    }
-}
-class Emitter {
-    constructor(){
-        this.events = {};
-    }
-    emit(t, ...e) {
-        let i = this.events[t] || [];
-        for(let t = 0, s = i.length; t < s; t++)i[t](...e);
-    }
-    on(t, e) {
-        return this.events[t]?.push(e) || (this.events[t] = [
-            e
-        ]), ()=>{
-            this.events[t] = this.events[t]?.filter((t)=>e !== t);
-        };
-    }
-    off(t, e) {
-        this.events[t] = this.events[t]?.filter((t)=>e !== t);
-    }
-    destroy() {
-        this.events = {};
-    }
-}
-const e = 100 / 6;
-class VirtualScroll {
-    constructor(t, { wheelMultiplier: e = 1, touchMultiplier: i = 1 }){
-        this.element = t, this.wheelMultiplier = e, this.touchMultiplier = i, this.touchStart = {
-            x: null,
-            y: null
-        }, this.emitter = new Emitter, window.addEventListener("resize", this.onWindowResize, !1), this.onWindowResize(), this.element.addEventListener("wheel", this.onWheel, {
-            passive: !1
-        }), this.element.addEventListener("touchstart", this.onTouchStart, {
-            passive: !1
-        }), this.element.addEventListener("touchmove", this.onTouchMove, {
-            passive: !1
-        }), this.element.addEventListener("touchend", this.onTouchEnd, {
-            passive: !1
-        });
-    }
-    on(t, e) {
-        return this.emitter.on(t, e);
-    }
-    destroy() {
-        this.emitter.destroy(), window.removeEventListener("resize", this.onWindowResize, !1), this.element.removeEventListener("wheel", this.onWheel, {
-            passive: !1
-        }), this.element.removeEventListener("touchstart", this.onTouchStart, {
-            passive: !1
-        }), this.element.removeEventListener("touchmove", this.onTouchMove, {
-            passive: !1
-        }), this.element.removeEventListener("touchend", this.onTouchEnd, {
-            passive: !1
-        });
-    }
-    onTouchStart = (t)=>{
-        const { clientX: e, clientY: i } = t.targetTouches ? t.targetTouches[0] : t;
-        this.touchStart.x = e, this.touchStart.y = i, this.lastDelta = {
-            x: 0,
-            y: 0
-        }, this.emitter.emit("scroll", {
-            deltaX: 0,
-            deltaY: 0,
-            event: t
-        });
-    };
-    onTouchMove = (t)=>{
-        const { clientX: e, clientY: i } = t.targetTouches ? t.targetTouches[0] : t, s = -(e - this.touchStart.x) * this.touchMultiplier, o = -(i - this.touchStart.y) * this.touchMultiplier;
-        this.touchStart.x = e, this.touchStart.y = i, this.lastDelta = {
-            x: s,
-            y: o
-        }, this.emitter.emit("scroll", {
-            deltaX: s,
-            deltaY: o,
-            event: t
-        });
-    };
-    onTouchEnd = (t)=>{
-        this.emitter.emit("scroll", {
-            deltaX: this.lastDelta.x,
-            deltaY: this.lastDelta.y,
-            event: t
-        });
-    };
-    onWheel = (t)=>{
-        let { deltaX: i, deltaY: s, deltaMode: o } = t;
-        i *= 1 === o ? e : 2 === o ? this.windowWidth : 1, s *= 1 === o ? e : 2 === o ? this.windowHeight : 1, i *= this.wheelMultiplier, s *= this.wheelMultiplier, this.emitter.emit("scroll", {
-            deltaX: i,
-            deltaY: s,
-            event: t
-        });
-    };
-    onWindowResize = ()=>{
-        this.windowWidth = window.innerWidth, this.windowHeight = window.innerHeight;
-    };
-}
-class Lenis {
-    constructor({ wrapper: t = window, content: e = document.documentElement, wheelEventsTarget: i = t, eventsTarget: s = i, smoothWheel: o = !0, syncTouch: n = !1, syncTouchLerp: r = .075, touchInertiaMultiplier: l = 35, duration: h, easing: a = (t)=>Math.min(1, 1.001 - Math.pow(2, -10 * t)), lerp: c = !h && .1, infinite: d = !1, orientation: p = "vertical", gestureOrientation: u = "vertical", touchMultiplier: m = 1, wheelMultiplier: v = 1, autoResize: g = !0, __experimental__naiveDimensions: S = !1 } = {}){
-        this.__isSmooth = !1, this.__isScrolling = !1, this.__isStopped = !1, this.__isLocked = !1, this.onVirtualScroll = ({ deltaX: t, deltaY: e, event: i })=>{
-            if (i.ctrlKey) return;
-            const s = i.type.includes("touch"), o = i.type.includes("wheel");
-            if (this.options.syncTouch && s && "touchstart" === i.type && !this.isStopped && !this.isLocked) return void this.reset();
-            const n = 0 === t && 0 === e, r = "vertical" === this.options.gestureOrientation && 0 === e || "horizontal" === this.options.gestureOrientation && 0 === t;
-            if (n || r) return;
-            let l = i.composedPath();
-            if (l = l.slice(0, l.indexOf(this.rootElement)), l.find((t)=>{
-                var e, i, n, r, l;
-                return (null === (e = t.hasAttribute) || void 0 === e ? void 0 : e.call(t, "data-lenis-prevent")) || s && (null === (i = t.hasAttribute) || void 0 === i ? void 0 : i.call(t, "data-lenis-prevent-touch")) || o && (null === (n = t.hasAttribute) || void 0 === n ? void 0 : n.call(t, "data-lenis-prevent-wheel")) || (null === (r = t.classList) || void 0 === r ? void 0 : r.contains("lenis")) && !(null === (l = t.classList) || void 0 === l ? void 0 : l.contains("lenis-stopped"));
-            })) return;
-            if (this.isStopped || this.isLocked) return void i.preventDefault();
-            if (this.isSmooth = this.options.syncTouch && s || this.options.smoothWheel && o, !this.isSmooth) return this.isScrolling = !1, void this.animate.stop();
-            i.preventDefault();
-            let h = e;
-            "both" === this.options.gestureOrientation ? h = Math.abs(e) > Math.abs(t) ? e : t : "horizontal" === this.options.gestureOrientation && (h = t);
-            const a = s && this.options.syncTouch, c = s && "touchend" === i.type && Math.abs(h) > 5;
-            c && (h = this.velocity * this.options.touchInertiaMultiplier), this.scrollTo(this.targetScroll + h, Object.assign({
-                programmatic: !1
-            }, a ? {
-                lerp: c ? this.options.syncTouchLerp : 1
-            } : {
-                lerp: this.options.lerp,
-                duration: this.options.duration,
-                easing: this.options.easing
-            }));
-        }, this.onNativeScroll = ()=>{
-            if (!this.__preventNextScrollEvent && !this.isScrolling) {
-                const t = this.animatedScroll;
-                this.animatedScroll = this.targetScroll = this.actualScroll, this.velocity = 0, this.direction = Math.sign(this.animatedScroll - t), this.emit();
-            }
-        }, window.lenisVersion = "1.0.42", t !== document.documentElement && t !== document.body || (t = window), this.options = {
-            wrapper: t,
-            content: e,
-            wheelEventsTarget: i,
-            eventsTarget: s,
-            smoothWheel: o,
-            syncTouch: n,
-            syncTouchLerp: r,
-            touchInertiaMultiplier: l,
-            duration: h,
-            easing: a,
-            lerp: c,
-            infinite: d,
-            gestureOrientation: u,
-            orientation: p,
-            touchMultiplier: m,
-            wheelMultiplier: v,
-            autoResize: g,
-            __experimental__naiveDimensions: S
-        }, this.animate = new Animate, this.emitter = new Emitter, this.dimensions = new Dimensions({
-            wrapper: t,
-            content: e,
-            autoResize: g
-        }), this.toggleClassName("lenis", !0), this.velocity = 0, this.isLocked = !1, this.isStopped = !1, this.isSmooth = n || o, this.isScrolling = !1, this.targetScroll = this.animatedScroll = this.actualScroll, this.options.wrapper.addEventListener("scroll", this.onNativeScroll, !1), this.virtualScroll = new VirtualScroll(s, {
-            touchMultiplier: m,
-            wheelMultiplier: v
-        }), this.virtualScroll.on("scroll", this.onVirtualScroll);
-    }
-    destroy() {
-        this.emitter.destroy(), this.options.wrapper.removeEventListener("scroll", this.onNativeScroll, !1), this.virtualScroll.destroy(), this.dimensions.destroy(), this.toggleClassName("lenis", !1), this.toggleClassName("lenis-smooth", !1), this.toggleClassName("lenis-scrolling", !1), this.toggleClassName("lenis-stopped", !1), this.toggleClassName("lenis-locked", !1);
-    }
-    on(t, e) {
-        return this.emitter.on(t, e);
-    }
-    off(t, e) {
-        return this.emitter.off(t, e);
-    }
-    setScroll(t) {
-        this.isHorizontal ? this.rootElement.scrollLeft = t : this.rootElement.scrollTop = t;
-    }
-    resize() {
-        this.dimensions.resize();
-    }
-    emit() {
-        this.emitter.emit("scroll", this);
-    }
-    reset() {
-        this.isLocked = !1, this.isScrolling = !1, this.animatedScroll = this.targetScroll = this.actualScroll, this.velocity = 0, this.animate.stop();
-    }
-    start() {
-        this.isStopped && (this.isStopped = !1, this.reset());
-    }
-    stop() {
-        this.isStopped || (this.isStopped = !0, this.animate.stop(), this.reset());
-    }
-    raf(t) {
-        const e = t - (this.time || t);
-        this.time = t, this.animate.advance(.001 * e);
-    }
-    scrollTo(e, { offset: i = 0, immediate: s = !1, lock: o = !1, duration: n = this.options.duration, easing: r = this.options.easing, lerp: l = !n && this.options.lerp, onComplete: h, force: a = !1, programmatic: c = !0 } = {}) {
-        if (!this.isStopped && !this.isLocked || a) {
-            if ([
-                "top",
-                "left",
-                "start"
-            ].includes(e)) e = 0;
-            else if ([
-                "bottom",
-                "right",
-                "end"
-            ].includes(e)) e = this.limit;
-            else {
-                let t;
-                if ("string" == typeof e ? t = document.querySelector(e) : (null == e ? void 0 : e.nodeType) && (t = e), t) {
-                    if (this.options.wrapper !== window) {
-                        const t = this.options.wrapper.getBoundingClientRect();
-                        i -= this.isHorizontal ? t.left : t.top;
-                    }
-                    const s = t.getBoundingClientRect();
-                    e = (this.isHorizontal ? s.left : s.top) + this.animatedScroll;
-                }
-            }
-            if ("number" == typeof e) {
-                if (e += i, e = Math.round(e), this.options.infinite ? c && (this.targetScroll = this.animatedScroll = this.scroll) : e = t(0, e, this.limit), s) return this.animatedScroll = this.targetScroll = e, this.setScroll(this.scroll), this.reset(), void (null == h || h(this));
-                if (!c) {
-                    if (e === this.targetScroll) return;
-                    this.targetScroll = e;
-                }
-                this.animate.fromTo(this.animatedScroll, e, {
-                    duration: n,
-                    easing: r,
-                    lerp: l,
-                    onStart: ()=>{
-                        o && (this.isLocked = !0), this.isScrolling = !0;
-                    },
-                    onUpdate: (t, e)=>{
-                        this.isScrolling = !0, this.velocity = t - this.animatedScroll, this.direction = Math.sign(this.velocity), this.animatedScroll = t, this.setScroll(this.scroll), c && (this.targetScroll = t), e || this.emit(), e && (this.reset(), this.emit(), null == h || h(this), this.__preventNextScrollEvent = !0, requestAnimationFrame(()=>{
-                            delete this.__preventNextScrollEvent;
-                        }));
-                    }
-                });
-            }
-        }
-    }
-    get rootElement() {
-        return this.options.wrapper === window ? document.documentElement : this.options.wrapper;
-    }
-    get limit() {
-        return this.options.__experimental__naiveDimensions ? this.isHorizontal ? this.rootElement.scrollWidth - this.rootElement.clientWidth : this.rootElement.scrollHeight - this.rootElement.clientHeight : this.dimensions.limit[this.isHorizontal ? "x" : "y"];
-    }
-    get isHorizontal() {
-        return "horizontal" === this.options.orientation;
-    }
-    get actualScroll() {
-        return this.isHorizontal ? this.rootElement.scrollLeft : this.rootElement.scrollTop;
-    }
-    get scroll() {
-        var t, e;
-        return this.options.infinite ? (t = this.animatedScroll, e = this.limit, (t % e + e) % e) : this.animatedScroll;
-    }
-    get progress() {
-        return 0 === this.limit ? 1 : this.scroll / this.limit;
-    }
-    get isSmooth() {
-        return this.__isSmooth;
-    }
-    set isSmooth(t) {
-        this.__isSmooth !== t && (this.__isSmooth = t, this.toggleClassName("lenis-smooth", t));
-    }
-    get isScrolling() {
-        return this.__isScrolling;
-    }
-    set isScrolling(t) {
-        this.__isScrolling !== t && (this.__isScrolling = t, this.toggleClassName("lenis-scrolling", t));
-    }
-    get isStopped() {
-        return this.__isStopped;
-    }
-    set isStopped(t) {
-        this.__isStopped !== t && (this.__isStopped = t, this.toggleClassName("lenis-stopped", t));
-    }
-    get isLocked() {
-        return this.__isLocked;
-    }
-    set isLocked(t) {
-        this.__isLocked !== t && (this.__isLocked = t, this.toggleClassName("lenis-locked", t));
-    }
-    get className() {
-        let t = "lenis";
-        return this.isStopped && (t += " lenis-stopped"), this.isLocked && (t += " lenis-locked"), this.isScrolling && (t += " lenis-scrolling"), this.isSmooth && (t += " lenis-smooth"), t;
-    }
-    toggleClassName(t, e) {
-        this.rootElement.classList.toggle(t, e), this.emitter.emit("className change", this);
-    }
-}
-
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"gkKU3":[function(require,module,exports) {
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"gkKU3":[function(require,module,exports,__globalThis) {
 exports.interopDefault = function(a) {
     return a && a.__esModule ? a : {
         default: a
     };
 };
 exports.defineInteropFlag = function(a) {
-    Object.defineProperty(a, "__esModule", {
+    Object.defineProperty(a, '__esModule', {
         value: true
     });
 };
 exports.exportAll = function(source, dest) {
     Object.keys(source).forEach(function(key) {
-        if (key === "default" || key === "__esModule" || Object.prototype.hasOwnProperty.call(dest, key)) return;
+        if (key === 'default' || key === '__esModule' || Object.prototype.hasOwnProperty.call(dest, key)) return;
         Object.defineProperty(dest, key, {
             enumerable: true,
             get: function() {
@@ -1068,20 +699,137 @@ exports.export = function(dest, destName, get) {
     });
 };
 
-},{}],"cIPEi":[function(require,module,exports) {
+},{}],"3EEbG":[function(require,module,exports,__globalThis) {
+// import { gsap } from "gsap";
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
-var _gsap = require("gsap"); // [import GSAP have to import in the function's js file]
-var _gsapDefault = parcelHelpers.interopDefault(_gsap);
-var _scrollTrigger = require("gsap/ScrollTrigger"); // [import GSAP have to import in the function's js file]
-var _scrollTriggerDefault = parcelHelpers.interopDefault(_scrollTrigger);
+function footer() {}
+exports.default = footer;
+
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"cIPEi":[function(require,module,exports,__globalThis) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+var _autotab = require("./autotab");
+var _autotabDefault = parcelHelpers.interopDefault(_autotab);
 function home() {
-// console.log(gsap);   // -- Check if it is okay
-// console.log(ScrollTrigger)   // -- Check if it is okay
+    (0, _autotabDefault.default)();
 }
 exports.default = home;
 
-},{"gsap":"fPSuC","gsap/ScrollTrigger":"7wnFk","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"fPSuC":[function(require,module,exports) {
+},{"./autotab":"eqrZs","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"eqrZs":[function(require,module,exports,__globalThis) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "default", ()=>autoTab);
+var _gsap = require("gsap");
+var _gsapDefault = parcelHelpers.interopDefault(_gsap);
+var _scrollTrigger = require("gsap/ScrollTrigger");
+var _scrollTriggerDefault = parcelHelpers.interopDefault(_scrollTrigger);
+function autoTab() {
+    // Auto tab for multiple tab menus with GSAP ScrollTrigger integration
+    var Webflow = Webflow || [];
+    Webflow.push(function() {
+        // Initialize GSAP and ScrollTrigger animations
+        (0, _gsapDefault.default).registerPlugin((0, _scrollTriggerDefault.default));
+        // Function to create a tab loop with GSAP animations for a specific component
+        function createTabLoop($component) {
+            var tabTimeout;
+            var isPaused = false;
+            var $tabMenu = $component.find(".w-tab-menu");
+            // Initial GSAP setup for all progress bars
+            $component.find(".tab-hor_progress").each(function() {
+                (0, _gsapDefault.default).set(this, {
+                    xPercent: -100
+                });
+            });
+            function playProgressAnimation($tab) {
+                const $progress = $tab.find(".tab-hor_progress");
+                (0, _gsapDefault.default).to($progress, {
+                    xPercent: 0,
+                    duration: 7,
+                    ease: "linear"
+                });
+            }
+            function resetProgressAnimation($tab) {
+                const $progress = $tab.find(".tab-hor_progress");
+                (0, _gsapDefault.default).to($progress, {
+                    xPercent: -100,
+                    duration: 0
+                });
+            }
+            function tabLoop() {
+                clearTimeout(tabTimeout);
+                if (!isPaused) tabTimeout = setTimeout(function() {
+                    var $currentTab = $tabMenu.children(".w--current:first");
+                    var $next = $currentTab.next();
+                    // Reset progress for all tabs except the next one
+                    $tabMenu.find(".w-tab-link").each(function() {
+                        resetProgressAnimation($(this));
+                    });
+                    if ($next.length) {
+                        resetProgressAnimation($currentTab);
+                        $next.removeAttr("href").click();
+                    } else {
+                        var $firstTab = $tabMenu.find(".w-tab-link:first");
+                        resetProgressAnimation($currentTab);
+                        $firstTab.removeAttr("href").click();
+                    }
+                }, 7000); // 7 seconds
+            }
+            // ScrollTrigger to start the tab loop and progress animations on scroll
+            (0, _scrollTriggerDefault.default).create({
+                trigger: $component[0],
+                start: "top 80%",
+                end: "bottom 20%",
+                onEnter: ()=>{
+                    tabLoop(); // Start the loop
+                    // Play the progress animation for the first tab
+                    const $firstTab = $tabMenu.find(".w-tab-link:first");
+                    playProgressAnimation($firstTab);
+                },
+                onLeaveBack: ()=>{
+                    // Reset all animations when scrolling out of view
+                    clearTimeout(tabTimeout);
+                    $tabMenu.find(".w-tab-link").each(function() {
+                        resetProgressAnimation($(this));
+                    });
+                }
+            });
+            // When a tab is clicked, reset the timeout and play the progress animation
+            $tabMenu.find(".w-tab-link").click(function() {
+                clearTimeout(tabTimeout);
+                tabLoop();
+                const $clickedTab = $(this);
+                // Reset progress for all tabs except the clicked one
+                $tabMenu.find(".w-tab-link").each(function() {
+                    if (!$(this).is($clickedTab)) resetProgressAnimation($(this));
+                });
+                // Play animation for the clicked tab
+                playProgressAnimation($clickedTab);
+            });
+            // Pause on hover over tab menu item
+            $tabMenu.find(".tab-hor_menu-item").hover(function() {
+                // Mouse enter
+                isPaused = true;
+                clearTimeout(tabTimeout);
+                // Pause GSAP animation for the hovered tab
+                const $hoveredTab = $(this).closest(".w-tab-link");
+                (0, _gsapDefault.default).globalTimeline.pause();
+            }, function() {
+                // Mouse leave
+                isPaused = false;
+                tabLoop();
+                // Resume GSAP animation
+                (0, _gsapDefault.default).globalTimeline.resume();
+            });
+        }
+        // Apply the tab loop to each .tab-hor_component
+        $(".tab-hor_component").each(function() {
+            createTabLoop($(this));
+        });
+    });
+}
+
+},{"gsap":"fPSuC","gsap/ScrollTrigger":"7wnFk","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"fPSuC":[function(require,module,exports,__globalThis) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "gsap", ()=>gsapWithCSS);
@@ -1114,7 +862,7 @@ var _csspluginJs = require("./CSSPlugin.js");
 var gsapWithCSS = (0, _gsapCoreJs.gsap).registerPlugin((0, _csspluginJs.CSSPlugin)) || (0, _gsapCoreJs.gsap), // to protect from tree shaking
 TweenMaxWithCSS = gsapWithCSS.core.Tween;
 
-},{"./gsap-core.js":"05eeC","./CSSPlugin.js":"l02JQ","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"05eeC":[function(require,module,exports) {
+},{"./gsap-core.js":"05eeC","./CSSPlugin.js":"l02JQ","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"05eeC":[function(require,module,exports,__globalThis) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "GSCache", ()=>GSCache);
@@ -4138,7 +3886,7 @@ _coreReady = 1;
 _windowExists() && _wake();
 var Power0 = _easeMap.Power0, Power1 = _easeMap.Power1, Power2 = _easeMap.Power2, Power3 = _easeMap.Power3, Power4 = _easeMap.Power4, Linear = _easeMap.Linear, Quad = _easeMap.Quad, Cubic = _easeMap.Cubic, Quart = _easeMap.Quart, Quint = _easeMap.Quint, Strong = _easeMap.Strong, Elastic = _easeMap.Elastic, Back = _easeMap.Back, SteppedEase = _easeMap.SteppedEase, Bounce = _easeMap.Bounce, Sine = _easeMap.Sine, Expo = _easeMap.Expo, Circ = _easeMap.Circ;
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"l02JQ":[function(require,module,exports) {
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"l02JQ":[function(require,module,exports,__globalThis) {
 /*!
  * CSSPlugin 3.12.5
  * https://gsap.com
@@ -5105,7 +4853,7 @@ var CSSPlugin = {
 });
 (0, _gsapCoreJs.gsap).registerPlugin(CSSPlugin);
 
-},{"./gsap-core.js":"05eeC","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"7wnFk":[function(require,module,exports) {
+},{"./gsap-core.js":"05eeC","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"7wnFk":[function(require,module,exports,__globalThis) {
 /*!
  * ScrollTrigger 3.12.5
  * https://gsap.com
@@ -6872,7 +6620,7 @@ ScrollTrigger.core = {
 };
 _getGSAP() && gsap.registerPlugin(ScrollTrigger);
 
-},{"./Observer.js":"aAWxM","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"aAWxM":[function(require,module,exports) {
+},{"./Observer.js":"aAWxM","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"aAWxM":[function(require,module,exports,__globalThis) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "Observer", ()=>Observer);
@@ -7329,48 +7077,30 @@ Observer.getById = function(id) {
 };
 _getGSAP() && gsap.registerPlugin(Observer);
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"fL9gf":[function(require,module,exports) {
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"fL9gf":[function(require,module,exports,__globalThis) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 function about() {}
 exports.default = about;
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"9nfro":[function(require,module,exports) {
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"9nfro":[function(require,module,exports,__globalThis) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 function work() {}
 exports.default = work;
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"gjwHc":[function(require,module,exports) {
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"gjwHc":[function(require,module,exports,__globalThis) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 function services() {}
 exports.default = services;
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"erAwr":[function(require,module,exports) {
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"erAwr":[function(require,module,exports,__globalThis) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 function career() {}
 exports.default = career;
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"9emQb":[function(require,module,exports) {
-// import { gsap } from "gsap";
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-function nav() {
-    $(".nav_description").on("click", function() {
-        $(this).toggleClass("is-test");
-    });
-}
-exports.default = nav;
-
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"3EEbG":[function(require,module,exports) {
-// import { gsap } from "gsap";
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-function footer() {}
-exports.default = footer;
-
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}]},["7XE4H","igcvL"], "igcvL", "parcelRequire7aed")
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}]},["jQqog","igcvL"], "igcvL", "parcelRequire94c2")
 
 //# sourceMappingURL=app.js.map
