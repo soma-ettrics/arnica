@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "Webflow development environment",
   "source": "app.js",
+  "@parcel/resolver-default": {
+    "packageExports": true
+  },
   "scripts": {
     "dev": "parcel app.js --hmr-port 50619",
     "build": "parcel build app.js",
@@ -22,7 +25,6 @@
   },
   "homepage": "https://github.com/szsoma/webflow-dev-starter#readme",
   "devDependencies": {
-    "@parcel/transformer-glsl": "^2.12.0",
     "jquery": "^3.7.1",
     "parcel": "^2.12.0",
     "parcel-reporter-static-files-copy": "^1.5.3",
@@ -32,10 +34,8 @@
     "staticPath": "public"
   },
   "dependencies": {
-    "@studio-freight/lenis": "^1.0.42",
     "gsap": "^3.12.5",
     "punycode": "^2.3.1",
-    "split-type": "^0.3.4",
     "swiper": "^11.1.14"
   }
 }
