@@ -7091,14 +7091,16 @@ function branch() {
     const branches = document.querySelectorAll("[data-branch]");
     // Loop through each [data-branch] element
     branches.forEach((branch)=>{
-        const greenLine = branch.querySelector("#green"); // Select the #green SVG line within this branch
-        if (greenLine) {
+        // Select all #green SVG elements within this branch
+        const greenLines = branch.querySelectorAll("#green");
+        // Loop through each #green line within the current branch
+        greenLines.forEach((greenLine)=>{
             // Get the height of the branch and the viewport
             const branchHeight = branch.offsetHeight;
             const viewportHeight = window.innerHeight;
             // Calculate the centerOffset with a minimum limit for smaller elements
             const centerOffset = Math.max((viewportHeight - branchHeight - branchHeight / 2) / 2, 0); // Avoid negative offsets
-            // Create a timeline for this specific branch
+            // Create a timeline for this specific green line
             const tl = (0, _gsap.gsap).timeline({
                 scrollTrigger: {
                     trigger: branch,
@@ -7114,9 +7116,9 @@ function branch() {
             }, {
                 drawSVG: "0% 100%",
                 duration: 2,
-                ease: "none" // Duration of the animation
+                ease: "none" // Ease of the animation
             });
-        }
+        });
     });
 }
 
