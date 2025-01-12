@@ -723,10 +723,11 @@ var _injectSvgDefault = parcelHelpers.interopDefault(_injectSvg);
 var _logoproof = require("./logoproof");
 var _logoproofDefault = parcelHelpers.interopDefault(_logoproof);
 function home() {
-    (0, _logoproofDefault.default)();
+    console.log("Initializing home page scripts");
     (0, _branchanimDefault.default)();
     (0, _injectSvgDefault.default)();
     (0, _autotabDefault.default)();
+    (0, _logoproofDefault.default)();
 }
 
 },{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./injectSvg":"2gLOp","./logoproof":"lJs2Z","../../global/branchanim":"vOPHW","../../global/autotab":"gEi0T"}],"2gLOp":[function(require,module,exports,__globalThis) {
@@ -734,24 +735,32 @@ var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "default", ()=>injectSvg);
 function injectSvg() {
-    // Select the .logo_box element
-    const logoBox = document.querySelector('.logo_box');
-    if (logoBox) {
+    // Select all .logo_box elements
+    const logoBoxes = document.querySelectorAll('.logo_box');
+    if (logoBoxes.length === 0) {
+        console.error('No elements found with the class .logo_box.');
+        return;
+    }
+    // Loop through each .logo_box element
+    logoBoxes.forEach((logoBox)=>{
         // Find the <img> element inside .logo_box
         const imgElement = logoBox.querySelector('img');
-        if (imgElement && imgElement.src) // Fetch the SVG file from the img src
-        fetch(imgElement.src).then((response)=>{
-            if (!response.ok) throw new Error(`Network response was not ok: ${response.statusText}`);
-            return response.text();
-        }).then((svgCode)=>{
-            // Inject the fetched SVG code into the .logo_box div
-            logoBox.innerHTML = svgCode;
-            console.log('SVG successfully injected into the .logo_box wrapper.');
-        }).catch((error)=>{
-            console.error('Failed to fetch SVG:', error);
-        });
-        else console.error('No <img> element or src attribute found inside .logo_box.');
-    }
+        if (imgElement && imgElement.src) {
+            // Check if the image is an SVG
+            if (imgElement.src.endsWith('.svg')) // Fetch the SVG file from the img src
+            fetch(imgElement.src).then((response)=>{
+                if (!response.ok) throw new Error(`Network response was not ok: ${response.statusText}`);
+                return response.text();
+            }).then((svgCode)=>{
+                // Inject the fetched SVG code into the .logo_box div
+                logoBox.innerHTML = svgCode;
+                console.log('SVG successfully injected into the .logo_box wrapper.');
+            }).catch((error)=>{
+                console.error('Failed to fetch SVG:', error);
+            });
+            else console.log('Image is not an SVG, leaving it unchanged.');
+        } else console.error('No <img> element or src attribute found inside .logo_box.');
+    });
 }
 
 },{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"lJs2Z":[function(require,module,exports,__globalThis) {
