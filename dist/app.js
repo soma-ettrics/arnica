@@ -622,6 +622,8 @@ var _services = require("./src/pages/services/services");
 var _servicesDefault = parcelHelpers.interopDefault(_services);
 var _career = require("./src/pages/career/career");
 var _careerDefault = parcelHelpers.interopDefault(_career);
+var _integrationPage = require("./src/pages/sub-pages/integration-page");
+var _integrationPageDefault = parcelHelpers.interopDefault(_integrationPage);
 const parceled = true;
 (0, _navDefault.default)();
 (0, _footerDefault.default)();
@@ -647,6 +649,10 @@ const initializePageScripts = ()=>{
         {
             className: 'body--career',
             initFunction: (0, _careerDefault.default)
+        },
+        {
+            className: 'body--integration',
+            initFunction: (0, _integrationPageDefault.default)
         }
     ];
     pages.forEach((page)=>{
@@ -656,7 +662,7 @@ const initializePageScripts = ()=>{
 // Execute page-specific scripts
 initializePageScripts();
 
-},{"./src/styles/style.css":"cy7Le","./src/global/nav":"9emQb","./src/global/footer":"3EEbG","./src/pages/home/home":"cIPEi","./src/pages/about/about":"fL9gf","./src/pages/work/work":"9nfro","./src/pages/services/services":"gjwHc","./src/pages/career/career":"erAwr","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"cy7Le":[function() {},{}],"9emQb":[function(require,module,exports,__globalThis) {
+},{"./src/styles/style.css":"cy7Le","./src/global/nav":"9emQb","./src/global/footer":"3EEbG","./src/pages/home/home":"cIPEi","./src/pages/about/about":"fL9gf","./src/pages/work/work":"9nfro","./src/pages/services/services":"gjwHc","./src/pages/career/career":"erAwr","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./src/pages/sub-pages/integration-page":"aqRRp"}],"cy7Le":[function() {},{}],"9emQb":[function(require,module,exports,__globalThis) {
 // jQuery test
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
@@ -707,130 +713,98 @@ exports.default = footer;
 },{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"cIPEi":[function(require,module,exports,__globalThis) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
-var _autotab = require("./autotab");
+parcelHelpers.export(exports, "default", ()=>home);
+var _autotab = require("../../global/autotab");
 var _autotabDefault = parcelHelpers.interopDefault(_autotab);
-var _branchanim = require("./branchanim");
+var _branchanim = require("../../global/branchanim");
 var _branchanimDefault = parcelHelpers.interopDefault(_branchanim);
 var _injectSvg = require("./injectSvg");
 var _injectSvgDefault = parcelHelpers.interopDefault(_injectSvg);
+var _logoproof = require("./logoproof");
+var _logoproofDefault = parcelHelpers.interopDefault(_logoproof);
 function home() {
+    (0, _logoproofDefault.default)();
     (0, _branchanimDefault.default)();
     (0, _injectSvgDefault.default)();
     (0, _autotabDefault.default)();
 }
-exports.default = home;
 
-},{"./autotab":"eqrZs","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./branchanim":"afTOg","./injectSvg":"2gLOp"}],"eqrZs":[function(require,module,exports,__globalThis) {
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./injectSvg":"2gLOp","./logoproof":"lJs2Z","../../global/branchanim":"vOPHW","../../global/autotab":"gEi0T"}],"2gLOp":[function(require,module,exports,__globalThis) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "default", ()=>autoTab);
-var _gsap = require("gsap");
-var _gsapDefault = parcelHelpers.interopDefault(_gsap);
-var _scrollTrigger = require("gsap/ScrollTrigger");
-var _scrollTriggerDefault = parcelHelpers.interopDefault(_scrollTrigger);
-function autoTab() {
-    // Auto tab for multiple tab menus with GSAP ScrollTrigger integration
-    // Initialize GSAP and ScrollTrigger animations
-    (0, _gsapDefault.default).registerPlugin((0, _scrollTriggerDefault.default));
-    // Function to create a tab loop with GSAP animations for a specific component
-    function createTabLoop($component) {
-        var tabTimeout;
-        var isPaused = false;
-        var $tabMenu = $component.find(".w-tab-menu");
-        // Initial GSAP setup for all progress bars
-        $component.find(".tab-hor_progress").each(function() {
-            (0, _gsapDefault.default).set(this, {
-                xPercent: -100
-            });
+parcelHelpers.export(exports, "default", ()=>injectSvg);
+function injectSvg() {
+    // Select the .logo_box element
+    const logoBox = document.querySelector('.logo_box');
+    if (logoBox) {
+        // Find the <img> element inside .logo_box
+        const imgElement = logoBox.querySelector('img');
+        if (imgElement && imgElement.src) // Fetch the SVG file from the img src
+        fetch(imgElement.src).then((response)=>{
+            if (!response.ok) throw new Error(`Network response was not ok: ${response.statusText}`);
+            return response.text();
+        }).then((svgCode)=>{
+            // Inject the fetched SVG code into the .logo_box div
+            logoBox.innerHTML = svgCode;
+            console.log('SVG successfully injected into the .logo_box wrapper.');
+        }).catch((error)=>{
+            console.error('Failed to fetch SVG:', error);
         });
-        function playProgressAnimation($tab) {
-            const $progress = $tab.find(".tab-hor_progress");
-            (0, _gsapDefault.default).to($progress, {
-                xPercent: 0,
-                duration: 7,
-                ease: "linear"
-            });
-        }
-        function resetProgressAnimation($tab) {
-            const $progress = $tab.find(".tab-hor_progress");
-            (0, _gsapDefault.default).to($progress, {
-                xPercent: -100,
-                duration: 0
-            });
-        }
-        function tabLoop() {
-            clearTimeout(tabTimeout);
-            if (!isPaused) tabTimeout = setTimeout(function() {
-                var $currentTab = $tabMenu.children(".w--current:first");
-                var $next = $currentTab.next();
-                // Reset progress for all tabs except the next one
-                $tabMenu.find(".w-tab-link").each(function() {
-                    resetProgressAnimation($(this));
-                });
-                if ($next.length) {
-                    resetProgressAnimation($currentTab);
-                    $next.removeAttr("href").click();
-                } else {
-                    var $firstTab = $tabMenu.find(".w-tab-link:first");
-                    resetProgressAnimation($currentTab);
-                    $firstTab.removeAttr("href").click();
-                }
-            }, 7000); // 7 seconds
-        }
-        // ScrollTrigger to start the tab loop and progress animations on scroll
-        (0, _scrollTriggerDefault.default).create({
-            trigger: $component[0],
-            start: "top 80%",
-            end: "bottom 20%",
-            onEnter: ()=>{
-                tabLoop(); // Start the loop
-                // Play the progress animation for the first tab
-                const $firstTab = $tabMenu.find(".w-tab-link:first");
-                playProgressAnimation($firstTab);
-            },
-            onLeaveBack: ()=>{
-                // Reset all animations when scrolling out of view
-                clearTimeout(tabTimeout);
-                $tabMenu.find(".w-tab-link").each(function() {
-                    resetProgressAnimation($(this));
-                });
-            }
-        });
-        // When a tab is clicked, reset the timeout and play the progress animation
-        $tabMenu.find(".w-tab-link").click(function() {
-            clearTimeout(tabTimeout);
-            tabLoop();
-            const $clickedTab = $(this);
-            // Reset progress for all tabs except the clicked one
-            $tabMenu.find(".w-tab-link").each(function() {
-                if (!$(this).is($clickedTab)) resetProgressAnimation($(this));
-            });
-            // Play animation for the clicked tab
-            playProgressAnimation($clickedTab);
-        });
-        // Pause on hover over tab menu item
-        $tabMenu.find(".tab-hor_menu-item").hover(function() {
-            // Mouse enter
-            isPaused = true;
-            clearTimeout(tabTimeout);
-            // Pause GSAP animation for the hovered tab
-            const $hoveredTab = $(this).closest(".w-tab-link");
-            (0, _gsapDefault.default).globalTimeline.pause();
-        }, function() {
-            // Mouse leave
-            isPaused = false;
-            tabLoop();
-            // Resume GSAP animation
-            (0, _gsapDefault.default).globalTimeline.resume();
-        });
+        else console.error('No <img> element or src attribute found inside .logo_box.');
     }
-    // Apply the tab loop to each .tab-hor_component
-    $(".tab-hor_component").each(function() {
-        createTabLoop($(this));
-    });
 }
 
-},{"gsap":"fPSuC","gsap/ScrollTrigger":"7wnFk","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"fPSuC":[function(require,module,exports,__globalThis) {
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"lJs2Z":[function(require,module,exports,__globalThis) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "default", ()=>logoproof);
+var _gsap = require("gsap");
+function logoproof() {
+    // Select all hero_logoproof-item elements
+    const items = document.querySelectorAll(".hero_logoproof-item");
+    // GSAP timeline for staggered animation
+    const timeline = (0, _gsap.gsap).timeline({
+        repeat: -1,
+        defaults: {
+            duration: 1,
+            ease: "power4.inOut"
+        }
+    });
+    timeline.to(items, {
+        onStart: ()=>{
+            // Stagger animation for both active and second logos
+            items.forEach((item, index)=>{
+                const imgs = item.querySelectorAll(".hero_logoproof-img");
+                (0, _gsap.gsap).to(imgs, {
+                    y: "-100%",
+                    duration: 1,
+                    ease: "power4.inOut",
+                    delay: index * 0.07
+                });
+            });
+        },
+        stagger: 0.1,
+        onComplete: ()=>{
+            // Reset positions when animation is complete
+            items.forEach((item)=>{
+                const imgs = item.querySelectorAll(".hero_logoproof-img");
+                const firstImg = imgs[0];
+                const secondImg = imgs[1];
+                // Swap the "is-2" class to indicate active logo
+                firstImg.classList.add("is-2");
+                secondImg.classList.remove("is-2");
+                // Reorder the DOM elements for seamless looping
+                item.appendChild(firstImg);
+                // Reset the individual images to their starting positions
+                (0, _gsap.gsap).set(imgs, {
+                    y: "0"
+                });
+            });
+        }
+    }, "+=4");
+}
+
+},{"gsap":"fPSuC","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"fPSuC":[function(require,module,exports,__globalThis) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "gsap", ()=>gsapWithCSS);
@@ -4854,7 +4828,51 @@ var CSSPlugin = {
 });
 (0, _gsapCoreJs.gsap).registerPlugin(CSSPlugin);
 
-},{"./gsap-core.js":"05eeC","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"7wnFk":[function(require,module,exports,__globalThis) {
+},{"./gsap-core.js":"05eeC","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"vOPHW":[function(require,module,exports,__globalThis) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "default", ()=>branch);
+var _gsap = require("gsap");
+var _scrollTrigger = require("gsap/ScrollTrigger");
+var _drawSVGPlugin = require("gsap/DrawSVGPlugin");
+function branch() {
+    (0, _gsap.gsap).registerPlugin((0, _scrollTrigger.ScrollTrigger), (0, _drawSVGPlugin.DrawSVGPlugin));
+    // Select all elements with the [data-branch] attribute
+    const branches = document.querySelectorAll("[data-branch]");
+    // Loop through each [data-branch] element
+    branches.forEach((branch)=>{
+        // Select all #green SVG elements within this branch
+        const greenLines = branch.querySelectorAll("#green");
+        // Loop through each #green line within the current branch
+        greenLines.forEach((greenLine)=>{
+            // Get the height of the branch and the viewport
+            const branchHeight = branch.offsetHeight;
+            const viewportHeight = window.innerHeight;
+            // Calculate the centerOffset with a minimum limit for smaller elements
+            const centerOffset = Math.max((viewportHeight - branchHeight - branchHeight / 2) / 2, 0); // Avoid negative offsets
+            // Create a timeline for this specific green line
+            const tl = (0, _gsap.gsap).timeline({
+                scrollTrigger: {
+                    trigger: branch,
+                    start: `top+=${centerOffset}px center`,
+                    end: `bottom-=${centerOffset}px center`,
+                    scrub: true,
+                    invalidateOnRefresh: true
+                }
+            });
+            // Add animation for the #green line
+            tl.fromTo(greenLine, {
+                drawSVG: "0% 0%"
+            }, {
+                drawSVG: "0% 100%",
+                duration: 2,
+                ease: "none" // Ease of the animation
+            });
+        });
+    });
+}
+
+},{"gsap":"fPSuC","gsap/ScrollTrigger":"7wnFk","gsap/DrawSVGPlugin":"htWnw","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"7wnFk":[function(require,module,exports,__globalThis) {
 /*!
  * ScrollTrigger 3.12.5
  * https://gsap.com
@@ -7078,51 +7096,7 @@ Observer.getById = function(id) {
 };
 _getGSAP() && gsap.registerPlugin(Observer);
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"afTOg":[function(require,module,exports,__globalThis) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "default", ()=>branch);
-var _gsap = require("gsap");
-var _scrollTrigger = require("gsap/ScrollTrigger");
-var _drawSVGPlugin = require("gsap/DrawSVGPlugin");
-function branch() {
-    (0, _gsap.gsap).registerPlugin((0, _scrollTrigger.ScrollTrigger), (0, _drawSVGPlugin.DrawSVGPlugin));
-    // Select all elements with the [data-branch] attribute
-    const branches = document.querySelectorAll("[data-branch]");
-    // Loop through each [data-branch] element
-    branches.forEach((branch)=>{
-        // Select all #green SVG elements within this branch
-        const greenLines = branch.querySelectorAll("#green");
-        // Loop through each #green line within the current branch
-        greenLines.forEach((greenLine)=>{
-            // Get the height of the branch and the viewport
-            const branchHeight = branch.offsetHeight;
-            const viewportHeight = window.innerHeight;
-            // Calculate the centerOffset with a minimum limit for smaller elements
-            const centerOffset = Math.max((viewportHeight - branchHeight - branchHeight / 2) / 2, 0); // Avoid negative offsets
-            // Create a timeline for this specific green line
-            const tl = (0, _gsap.gsap).timeline({
-                scrollTrigger: {
-                    trigger: branch,
-                    start: `top+=${centerOffset}px center`,
-                    end: `bottom-=${centerOffset}px center`,
-                    scrub: true,
-                    invalidateOnRefresh: true
-                }
-            });
-            // Add animation for the #green line
-            tl.fromTo(greenLine, {
-                drawSVG: "0% 0%"
-            }, {
-                drawSVG: "0% 100%",
-                duration: 2,
-                ease: "none" // Ease of the animation
-            });
-        });
-    });
-}
-
-},{"gsap/ScrollTrigger":"7wnFk","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","gsap/DrawSVGPlugin":"htWnw","gsap":"fPSuC"}],"htWnw":[function(require,module,exports,__globalThis) {
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"htWnw":[function(require,module,exports,__globalThis) {
 /*!
  * DrawSVGPlugin 3.12.5
  * https://gsap.com
@@ -7353,32 +7327,117 @@ var DrawSVGPlugin = {
 };
 _getGSAP() && gsap.registerPlugin(DrawSVGPlugin);
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"2gLOp":[function(require,module,exports,__globalThis) {
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"gEi0T":[function(require,module,exports,__globalThis) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "default", ()=>injectSvg);
-function injectSvg() {
-    // Select the .logo_box element
-    const logoBox = document.querySelector('.logo_box');
-    if (logoBox) {
-        // Find the <img> element inside .logo_box
-        const imgElement = logoBox.querySelector('img');
-        if (imgElement && imgElement.src) // Fetch the SVG file from the img src
-        fetch(imgElement.src).then((response)=>{
-            if (!response.ok) throw new Error(`Network response was not ok: ${response.statusText}`);
-            return response.text();
-        }).then((svgCode)=>{
-            // Inject the fetched SVG code into the .logo_box div
-            logoBox.innerHTML = svgCode;
-            console.log('SVG successfully injected into the .logo_box wrapper.');
-        }).catch((error)=>{
-            console.error('Failed to fetch SVG:', error);
+parcelHelpers.export(exports, "default", ()=>autoTab);
+var _gsap = require("gsap");
+var _gsapDefault = parcelHelpers.interopDefault(_gsap);
+var _scrollTrigger = require("gsap/ScrollTrigger");
+var _scrollTriggerDefault = parcelHelpers.interopDefault(_scrollTrigger);
+function autoTab() {
+    // Auto tab for multiple tab menus with GSAP ScrollTrigger integration
+    // Initialize GSAP and ScrollTrigger animations
+    (0, _gsapDefault.default).registerPlugin((0, _scrollTriggerDefault.default));
+    // Function to create a tab loop with GSAP animations for a specific component
+    function createTabLoop($component) {
+        var tabTimeout;
+        var isPaused = false;
+        var $tabMenu = $component.find(".w-tab-menu");
+        // Initial GSAP setup for all progress bars
+        $component.find(".tab-hor_progress").each(function() {
+            (0, _gsapDefault.default).set(this, {
+                xPercent: -100
+            });
         });
-        else console.error('No <img> element or src attribute found inside .logo_box.');
+        function playProgressAnimation($tab) {
+            const $progress = $tab.find(".tab-hor_progress");
+            (0, _gsapDefault.default).to($progress, {
+                xPercent: 0,
+                duration: 7,
+                ease: "linear"
+            });
+        }
+        function resetProgressAnimation($tab) {
+            const $progress = $tab.find(".tab-hor_progress");
+            (0, _gsapDefault.default).to($progress, {
+                xPercent: -100,
+                duration: 0
+            });
+        }
+        function tabLoop() {
+            clearTimeout(tabTimeout);
+            if (!isPaused) tabTimeout = setTimeout(function() {
+                var $currentTab = $tabMenu.children(".w--current:first");
+                var $next = $currentTab.next();
+                // Reset progress for all tabs except the next one
+                $tabMenu.find(".w-tab-link").each(function() {
+                    resetProgressAnimation($(this));
+                });
+                if ($next.length) {
+                    resetProgressAnimation($currentTab);
+                    $next.removeAttr("href").click();
+                } else {
+                    var $firstTab = $tabMenu.find(".w-tab-link:first");
+                    resetProgressAnimation($currentTab);
+                    $firstTab.removeAttr("href").click();
+                }
+            }, 7000); // 7 seconds
+        }
+        // ScrollTrigger to start the tab loop and progress animations on scroll
+        (0, _scrollTriggerDefault.default).create({
+            trigger: $component[0],
+            start: "top 80%",
+            end: "bottom 20%",
+            onEnter: ()=>{
+                tabLoop(); // Start the loop
+                // Play the progress animation for the first tab
+                const $firstTab = $tabMenu.find(".w-tab-link:first");
+                playProgressAnimation($firstTab);
+            },
+            onLeaveBack: ()=>{
+                // Reset all animations when scrolling out of view
+                clearTimeout(tabTimeout);
+                $tabMenu.find(".w-tab-link").each(function() {
+                    resetProgressAnimation($(this));
+                });
+            }
+        });
+        // When a tab is clicked, reset the timeout and play the progress animation
+        $tabMenu.find(".w-tab-link").click(function() {
+            clearTimeout(tabTimeout);
+            tabLoop();
+            const $clickedTab = $(this);
+            // Reset progress for all tabs except the clicked one
+            $tabMenu.find(".w-tab-link").each(function() {
+                if (!$(this).is($clickedTab)) resetProgressAnimation($(this));
+            });
+            // Play animation for the clicked tab
+            playProgressAnimation($clickedTab);
+        });
+        // Pause on hover over tab menu item
+        $tabMenu.find(".tab-hor_menu-item").hover(function() {
+            // Mouse enter
+            isPaused = true;
+            clearTimeout(tabTimeout);
+            // Pause GSAP animation for the hovered tab
+            const $hoveredTab = $(this).closest(".w-tab-link");
+            (0, _gsapDefault.default).globalTimeline.pause();
+        }, function() {
+            // Mouse leave
+            isPaused = false;
+            tabLoop();
+            // Resume GSAP animation
+            (0, _gsapDefault.default).globalTimeline.resume();
+        });
     }
+    // Apply the tab loop to each .tab-hor_component
+    $(".tab-hor_component").each(function() {
+        createTabLoop($(this));
+    });
 }
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"fL9gf":[function(require,module,exports,__globalThis) {
+},{"gsap":"fPSuC","gsap/ScrollTrigger":"7wnFk","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"fL9gf":[function(require,module,exports,__globalThis) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 function about() {}
@@ -7402,6 +7461,19 @@ parcelHelpers.defineInteropFlag(exports);
 function career() {}
 exports.default = career;
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}]},["jQqog","igcvL"], "igcvL", "parcelRequire94c2")
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"aqRRp":[function(require,module,exports,__globalThis) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "default", ()=>integration);
+var _branchanim = require("../../global/branchanim");
+var _branchanimDefault = parcelHelpers.interopDefault(_branchanim);
+var _autotab = require("../../global/autotab");
+var _autotabDefault = parcelHelpers.interopDefault(_autotab);
+function integration() {
+    (0, _branchanimDefault.default)();
+    (0, _autotabDefault.default)();
+}
+
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","../../global/branchanim":"vOPHW","../../global/autotab":"gEi0T"}]},["jQqog","igcvL"], "igcvL", "parcelRequire94c2")
 
 //# sourceMappingURL=app.js.map

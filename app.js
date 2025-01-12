@@ -25,6 +25,7 @@ import about from "./src/pages/about/about";
 import work from "./src/pages/work/work";
 import services from "./src/pages/services/services";
 import career from "./src/pages/career/career";
+import integration from "./src/pages/sub-pages/integration-page";
 
 // Function to initialize page-specific scripts
 const initializePageScripts = () => {
@@ -33,7 +34,8 @@ const initializePageScripts = () => {
     { className: 'body--about', initFunction: about },
     { className: 'body--work', initFunction: work },
     { className: 'body--services', initFunction: services },
-    { className: 'body--career', initFunction: career }
+    { className: 'body--career', initFunction: career },
+    { className: 'body--integration', initFunction: integration }
   ];
 
   pages.forEach(page => {

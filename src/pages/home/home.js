@@ -1,12 +1,12 @@
-import autoTab from "./autotab"
-import branch from "./branchanim";
+import autoTab from "../../global/autotab"
+import branch from "../../global/branchanim";
 import injectSvg from "./injectSvg";
+import logoproof from "./logoproof";
 
-function home()
+export default function home()
 {
+    logoproof();
     branch();
     injectSvg();
     autoTab();
 }
-
-export default home
