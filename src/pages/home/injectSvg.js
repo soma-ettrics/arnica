@@ -26,8 +26,6 @@ export default function injectSvg() {
           .then(svgCode => {
             // Inject the fetched SVG code into the .logo_box div
             logoBox.innerHTML = svgCode;
-
-            console.log('SVG successfully injected into the .logo_box wrapper.');
           })
           .catch(error => {
             console.error('Failed to fetch SVG:', error);

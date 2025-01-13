@@ -1,9 +1,9 @@
-
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { DrawSVGPlugin } from "gsap/DrawSVGPlugin";
 
 export default function branch() {
+    console.log("branch animation init");
     gsap.registerPlugin(ScrollTrigger, DrawSVGPlugin);
 
     // Select all elements with the [data-branch] attribute
@@ -11,8 +11,9 @@ export default function branch() {
 
     // Loop through each [data-branch] element
     branches.forEach((branch) => {
-        // Select all #green SVG elements within this branch
+        // Select all #green SVG elements and #point circles within this branch
         const greenLines = branch.querySelectorAll("#green");
+        const greenPoints = branch.querySelectorAll("#point");
 
         // Loop through each #green line within the current branch
         greenLines.forEach((greenLine) => {
@@ -28,7 +29,7 @@ export default function branch() {
                 scrollTrigger: {
                     trigger: branch, // Trigger is still the entire branch
                     start: `top+=${centerOffset}px center`, // Adjust the start point to center the #green line
-                    end: `bottom-=${centerOffset}px center`, // Adjust the end point similarly
+                    end: "bottom center", // Adjust the end point similarly
                     scrub: true, // Smooth scrubbing
                     invalidateOnRefresh: true, // Recalculate on viewport resize
                 },
@@ -41,9 +42,29 @@ export default function branch() {
                 {
                     drawSVG: "0% 100%", // End state
                     duration: 2,
-                    ease: "none" // Ease of the animation
+                    ease: "none", // Ease of the animation
                 }
             );
+
+            // Add animation for greenPoints (SVG circles)
+            greenPoints.forEach((point) => {
+                gsap.fromTo(
+                    point,
+                    { opacity: 0, scale: 0 }, // Initial state: hidden and shrunk
+                    {
+                        opacity: 1,
+                        scale: 1,
+                        duration: 0.2, // Duration of the reveal animation
+                        ease: "power4.out", // Smooth easing
+                        scrollTrigger: {
+                            trigger: point, // Trigger individually for each point
+                            start: "center center", // When the point reaches the center of the viewport
+                            end: "center-=10 center", // Slight overlap for smooth reveal
+                            toggleActions: "play none reverse none", // Play the animation only once
+                        },
+                    }
+                );
+            });
         });
     });
 }

@@ -723,7 +723,6 @@ var _injectSvgDefault = parcelHelpers.interopDefault(_injectSvg);
 var _logoproof = require("./logoproof");
 var _logoproofDefault = parcelHelpers.interopDefault(_logoproof);
 function home() {
-    console.log("Initializing home page scripts");
     (0, _branchanimDefault.default)();
     (0, _injectSvgDefault.default)();
     (0, _autotabDefault.default)();
@@ -754,7 +753,6 @@ function injectSvg() {
             }).then((svgCode)=>{
                 // Inject the fetched SVG code into the .logo_box div
                 logoBox.innerHTML = svgCode;
-                console.log('SVG successfully injected into the .logo_box wrapper.');
             }).catch((error)=>{
                 console.error('Failed to fetch SVG:', error);
             });
@@ -4845,13 +4843,15 @@ var _gsap = require("gsap");
 var _scrollTrigger = require("gsap/ScrollTrigger");
 var _drawSVGPlugin = require("gsap/DrawSVGPlugin");
 function branch() {
+    console.log("branch animation init");
     (0, _gsap.gsap).registerPlugin((0, _scrollTrigger.ScrollTrigger), (0, _drawSVGPlugin.DrawSVGPlugin));
     // Select all elements with the [data-branch] attribute
     const branches = document.querySelectorAll("[data-branch]");
     // Loop through each [data-branch] element
     branches.forEach((branch)=>{
-        // Select all #green SVG elements within this branch
+        // Select all #green SVG elements and #point circles within this branch
         const greenLines = branch.querySelectorAll("#green");
+        const greenPoints = branch.querySelectorAll("#point");
         // Loop through each #green line within the current branch
         greenLines.forEach((greenLine)=>{
             // Get the height of the branch and the viewport
@@ -4864,7 +4864,7 @@ function branch() {
                 scrollTrigger: {
                     trigger: branch,
                     start: `top+=${centerOffset}px center`,
-                    end: `bottom-=${centerOffset}px center`,
+                    end: "bottom center",
                     scrub: true,
                     invalidateOnRefresh: true
                 }
@@ -4875,7 +4875,25 @@ function branch() {
             }, {
                 drawSVG: "0% 100%",
                 duration: 2,
-                ease: "none" // Ease of the animation
+                ease: "none"
+            });
+            // Add animation for greenPoints (SVG circles)
+            greenPoints.forEach((point)=>{
+                (0, _gsap.gsap).fromTo(point, {
+                    opacity: 0,
+                    scale: 0
+                }, {
+                    opacity: 1,
+                    scale: 1,
+                    duration: 0.2,
+                    ease: "power4.out",
+                    scrollTrigger: {
+                        trigger: point,
+                        start: "center center",
+                        end: "center-=10 center",
+                        toggleActions: "play none reverse none"
+                    }
+                });
             });
         });
     });
