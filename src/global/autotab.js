@@ -2,8 +2,7 @@ import gsap from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
 
 export default function autoTab() {
-
-// Auto tab for multiple tab menus with GSAP ScrollTrigger integration
+  // Auto tab for multiple tab menus with GSAP ScrollTrigger integration
 
   // Initialize GSAP and ScrollTrigger animations
   gsap.registerPlugin(ScrollTrigger);
@@ -118,6 +117,31 @@ export default function autoTab() {
       }
     );
   }
+
+  // Observer to monitor .w-nav-button class changes
+  const navButton = document.querySelector(".w-nav-button");
+  const observer = new MutationObserver(() => {
+    const hasOpenClass = navButton.classList.contains("w--open");
+    if (hasOpenClass) {
+      // Pause all tab animations
+      gsap.globalTimeline.pause();
+      clearTimeout(tabTimeout);
+      isPaused = true;
+    } else {
+      // Resume all tab animations
+      gsap.globalTimeline.resume();
+      isPaused = false;
+      $(".tab-hor_component").each(function () {
+        const $component = $(this);
+        const $tabMenu = $component.find(".w-tab-menu");
+        const $currentTab = $tabMenu.find(".w--current:first");
+        playProgressAnimation($currentTab);
+        tabLoop();
+      });
+    }
+  });
+
+  observer.observe(navButton, { attributes: true, attributeFilter: ["class"] });
 
   // Apply the tab loop to each .tab-hor_component
   $(".tab-hor_component").each(function () {

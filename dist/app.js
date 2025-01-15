@@ -724,15 +724,18 @@ var _logoproof = require("./logoproof");
 var _logoproofDefault = parcelHelpers.interopDefault(_logoproof);
 var _stats = require("../../global/stats");
 var _statsDefault = parcelHelpers.interopDefault(_stats);
+var _tabdark = require("./tabdark");
+var _tabdarkDefault = parcelHelpers.interopDefault(_tabdark);
 function home() {
     (0, _statsDefault.default)();
     (0, _branchanimDefault.default)();
     (0, _injectSvgDefault.default)();
     (0, _autotabDefault.default)();
     (0, _logoproofDefault.default)();
+    (0, _tabdarkDefault.default)();
 }
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./injectSvg":"2gLOp","./logoproof":"lJs2Z","../../global/branchanim":"vOPHW","../../global/autotab":"gEi0T","../../global/stats":"9y0Rc"}],"2gLOp":[function(require,module,exports,__globalThis) {
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./injectSvg":"2gLOp","./logoproof":"lJs2Z","../../global/branchanim":"vOPHW","../../global/autotab":"gEi0T","../../global/stats":"9y0Rc","./tabdark":"8RiVW"}],"2gLOp":[function(require,module,exports,__globalThis) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "default", ()=>injectSvg);
@@ -7371,8 +7374,8 @@ function autoTab() {
     (0, _gsapDefault.default).registerPlugin((0, _scrollTriggerDefault.default));
     // Function to create a tab loop with GSAP animations for a specific component
     function createTabLoop($component) {
-        var tabTimeout;
-        var isPaused = false;
+        var tabTimeout1;
+        var isPaused1 = false;
         var $tabMenu = $component.find(".w-tab-menu");
         // Initial GSAP setup for all progress bars
         $component.find(".tab-hor_progress").each(function() {
@@ -7380,7 +7383,7 @@ function autoTab() {
                 xPercent: -100
             });
         });
-        function playProgressAnimation($tab) {
+        function playProgressAnimation1($tab) {
             const $progress = $tab.find(".tab-hor_progress");
             (0, _gsapDefault.default).to($progress, {
                 xPercent: 0,
@@ -7395,9 +7398,9 @@ function autoTab() {
                 duration: 0
             });
         }
-        function tabLoop() {
-            clearTimeout(tabTimeout);
-            if (!isPaused) tabTimeout = setTimeout(function() {
+        function tabLoop1() {
+            clearTimeout(tabTimeout1);
+            if (!isPaused1) tabTimeout1 = setTimeout(function() {
                 var $currentTab = $tabMenu.children(".w--current:first");
                 var $next = $currentTab.next();
                 // Reset progress for all tabs except the next one
@@ -7420,14 +7423,14 @@ function autoTab() {
             start: "top 80%",
             end: "bottom 20%",
             onEnter: ()=>{
-                tabLoop(); // Start the loop
+                tabLoop1(); // Start the loop
                 // Play the progress animation for the first tab
                 const $firstTab = $tabMenu.find(".w-tab-link:first");
-                playProgressAnimation($firstTab);
+                playProgressAnimation1($firstTab);
             },
             onLeaveBack: ()=>{
                 // Reset all animations when scrolling out of view
-                clearTimeout(tabTimeout);
+                clearTimeout(tabTimeout1);
                 $tabMenu.find(".w-tab-link").each(function() {
                     resetProgressAnimation($(this));
                 });
@@ -7435,32 +7438,60 @@ function autoTab() {
         });
         // When a tab is clicked, reset the timeout and play the progress animation
         $tabMenu.find(".w-tab-link").click(function() {
-            clearTimeout(tabTimeout);
-            tabLoop();
+            clearTimeout(tabTimeout1);
+            tabLoop1();
             const $clickedTab = $(this);
             // Reset progress for all tabs except the clicked one
             $tabMenu.find(".w-tab-link").each(function() {
                 if (!$(this).is($clickedTab)) resetProgressAnimation($(this));
             });
             // Play animation for the clicked tab
-            playProgressAnimation($clickedTab);
+            playProgressAnimation1($clickedTab);
         });
         // Pause on hover over tab menu item
         $tabMenu.find(".tab-hor_menu-item").hover(function() {
             // Mouse enter
-            isPaused = true;
-            clearTimeout(tabTimeout);
+            isPaused1 = true;
+            clearTimeout(tabTimeout1);
             // Pause GSAP animation for the hovered tab
             const $hoveredTab = $(this).closest(".w-tab-link");
             (0, _gsapDefault.default).globalTimeline.pause();
         }, function() {
             // Mouse leave
-            isPaused = false;
-            tabLoop();
+            isPaused1 = false;
+            tabLoop1();
             // Resume GSAP animation
             (0, _gsapDefault.default).globalTimeline.resume();
         });
     }
+    // Observer to monitor .w-nav-button class changes
+    const navButton = document.querySelector(".w-nav-button");
+    const observer = new MutationObserver(()=>{
+        const hasOpenClass = navButton.classList.contains("w--open");
+        if (hasOpenClass) {
+            // Pause all tab animations
+            (0, _gsapDefault.default).globalTimeline.pause();
+            clearTimeout(tabTimeout);
+            isPaused = true;
+        } else {
+            // Resume all tab animations
+            (0, _gsapDefault.default).globalTimeline.resume();
+            isPaused = false;
+            $(".tab-hor_component").each(function() {
+                const $component = $(this);
+                const $tabMenu = $component.find(".w-tab-menu");
+                const $currentTab = $tabMenu.find(".w--current:first");
+                playProgressAnimation($currentTab);
+                tabLoop();
+            });
+        }
+    });
+    observer.observe(navButton, {
+        attributes: true,
+        attributeFilter: [
+            "class"
+        ]
+    });
     // Apply the tab loop to each .tab-hor_component
     $(".tab-hor_component").each(function() {
         createTabLoop($(this));
@@ -7596,7 +7627,145 @@ var t = function() {
     }, i;
 }();
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"fL9gf":[function(require,module,exports,__globalThis) {
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"8RiVW":[function(require,module,exports,__globalThis) {
+// GSAP animation for looping through .half-tab_menu-item and .halftabEyebrows
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "default", ()=>tabdark);
+var _gsap = require("gsap");
+function tabdark() {
+    document.addEventListener("DOMContentLoaded", ()=>{
+        // Select all necessary elements
+        const menuItems = document.querySelectorAll(".half-tab_menu-item");
+        const progressBars = document.querySelectorAll(".tab-hor_progress-wrap.is-dark .tab-hor_progress");
+        const eyebrows = document.querySelectorAll(".tab-hor_progress-wrap.is-dark");
+        // Initial state setup
+        (0, _gsap.gsap).set(menuItems, {
+            opacity: 0.4,
+            height: "3.8rem"
+        });
+        (0, _gsap.gsap).set(progressBars, {
+            opacity: 0,
+            x: "-100%"
+        });
+        (0, _gsap.gsap).set(eyebrows, {
+            opacity: 0
+        });
+        let activeIndex = 0;
+        let animationInterval;
+        // Function to animate the active item
+        function animateActiveItem() {
+            // Reset all items and progress bars
+            menuItems.forEach((item, index)=>{
+                if (index !== activeIndex) (0, _gsap.gsap).to(item, {
+                    opacity: 0.4,
+                    height: "3.8rem",
+                    duration: 0.3
+                });
+            });
+            progressBars.forEach((progress, index)=>{
+                if (index !== activeIndex) {
+                    (0, _gsap.gsap).to(progress, {
+                        opacity: 0,
+                        duration: 0.2
+                    }); // Only animate opacity
+                    (0, _gsap.gsap).set(progress, {
+                        x: "-100%"
+                    }); // Reset x without animation
+                }
+            });
+            eyebrows.forEach((brow, index)=>{
+                if (index !== activeIndex) (0, _gsap.gsap).to(brow, {
+                    opacity: 0,
+                    duration: 0.3
+                });
+            });
+            // Animate the active item
+            const activeItem = menuItems[activeIndex];
+            const activeProgressBar = progressBars[activeIndex];
+            const activeEyebrow = eyebrows[activeIndex];
+            (0, _gsap.gsap).to(activeItem, {
+                opacity: 1,
+                height: "auto",
+                duration: 0.3
+            });
+            (0, _gsap.gsap).to(activeProgressBar, {
+                opacity: 1,
+                duration: 0.3
+            }); // Reveal progress bar opacity
+            (0, _gsap.gsap).to(activeProgressBar, {
+                x: "0%",
+                duration: 7,
+                ease: "linear"
+            }); // Animate x
+            (0, _gsap.gsap).to(activeEyebrow, {
+                opacity: 1,
+                duration: 0.3
+            });
+        }
+        // Function to reset animations after click
+        function resetAnimations() {
+            progressBars.forEach((progress)=>{
+                (0, _gsap.gsap).set(progress, {
+                    opacity: 0,
+                    x: "-100%"
+                });
+            });
+            eyebrows.forEach((brow)=>{
+                (0, _gsap.gsap).set(brow, {
+                    opacity: 0
+                });
+            });
+            menuItems.forEach((item)=>{
+                (0, _gsap.gsap).set(item, {
+                    opacity: 0.4,
+                    height: "3.8rem"
+                });
+            });
+        }
+        // Function to stop animations
+        function stopAnimations() {
+            (0, _gsap.gsap).globalTimeline.pause();
+            clearInterval(animationInterval);
+        }
+        // Function to start animations
+        function startAnimations() {
+            (0, _gsap.gsap).globalTimeline.resume();
+            clearInterval(animationInterval);
+            animationInterval = setInterval(()=>{
+                activeIndex = (activeIndex + 1) % menuItems.length;
+                animateActiveItem();
+            }, 7000);
+        }
+        // Add hover listeners to stop animations
+        menuItems.forEach((item, index)=>{
+            item.addEventListener("mouseenter", ()=>{
+                if (index === activeIndex) stopAnimations();
+            });
+            item.addEventListener("mouseleave", ()=>{
+                if (index === activeIndex) startAnimations();
+            });
+        });
+        // Add click listener to switch active tab
+        menuItems.forEach((item, index)=>{
+            item.addEventListener("click", ()=>{
+                stopAnimations();
+                resetAnimations(); // Reset all animations before applying new state
+                activeIndex = index; // Set active index to the clicked item
+                animateActiveItem(); // Trigger the animation
+                startAnimations(); // Restart the interval
+            });
+        });
+        // Start the animation loop
+        animateActiveItem(); // Initial animation
+        animationInterval = setInterval(()=>{
+            activeIndex = (activeIndex + 1) % menuItems.length;
+            animateActiveItem();
+        }, 7000); // Repeat every 7 seconds
+    });
+}
+
+},{"gsap":"fPSuC","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"fL9gf":[function(require,module,exports,__globalThis) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 function about() {}
