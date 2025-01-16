@@ -1,4 +1,4 @@
-// GSAP animation for looping through .half-tab_menu-item and .halftabEyebrows
+// GSAP animation for looping through .half-tab_menu-item and .halftabtabProgressWrap
 import { gsap } from "gsap";
 
 export default function tabdark() {
@@ -6,19 +6,21 @@ export default function tabdark() {
     // Select all necessary elements
     const menuItems = document.querySelectorAll(".half-tab_menu-item");
     const progressBars = document.querySelectorAll(".tab-hor_progress-wrap.is-dark .tab-hor_progress");
-    const eyebrows = document.querySelectorAll(".tab-hor_progress-wrap.is-dark");
+    const tabProgressWrap = document.querySelectorAll(".tab-hor_progress-wrap.is-dark");
+    const eyebrows = document.querySelectorAll(".tab-hor_eyebrow-anim .a_eyebrow");
 
     // Initial state setup
     gsap.set(menuItems, { opacity: 0.4, height: "3.8rem" });
     gsap.set(progressBars, { opacity: 0, x: "-100%" });
-    gsap.set(eyebrows, { opacity: 0 });
+    gsap.set(tabProgressWrap, { opacity: 0 });
+    gsap.set(eyebrows, { opacity: 0.4 });
 
     let activeIndex = 0;
     let animationInterval;
 
     // Function to animate the active item
     function animateActiveItem() {
-      // Reset all items and progress bars
+      // Reset all items, progress bars, and eyebrows
       menuItems.forEach((item, index) => {
         if (index !== activeIndex) {
           gsap.to(item, { opacity: 0.4, height: "3.8rem", duration: 0.3 });
@@ -30,21 +32,28 @@ export default function tabdark() {
           gsap.set(progress, { x: "-100%" }); // Reset x without animation
         }
       });
-      eyebrows.forEach((brow, index) => {
+      tabProgressWrap.forEach((brow, index) => {
         if (index !== activeIndex) {
           gsap.to(brow, { opacity: 0, duration: 0.3 });
+        }
+      });
+      eyebrows.forEach((eyebrow, index) => {
+        if (index !== activeIndex) {
+          gsap.to(eyebrow, { opacity: 0.4, duration: 0.3 });
         }
       });
 
       // Animate the active item
       const activeItem = menuItems[activeIndex];
       const activeProgressBar = progressBars[activeIndex];
+      const activeEyebrowWrap = tabProgressWrap[activeIndex];
       const activeEyebrow = eyebrows[activeIndex];
 
       gsap.to(activeItem, { opacity: 1, height: "auto", duration: 0.3 });
       gsap.to(activeProgressBar, { opacity: 1, duration: 0.3 }); // Reveal progress bar opacity
       gsap.to(activeProgressBar, { x: "0%", duration: 7, ease: "linear" }); // Animate x
-      gsap.to(activeEyebrow, { opacity: 1, duration: 0.3 });
+      gsap.to(activeEyebrowWrap, { opacity: 1, duration: 0.3 });
+      gsap.to(activeEyebrow, { opacity: 1, duration: 0.3 }); // Highlight active eyebrow
     }
 
     // Function to reset animations after click
@@ -52,11 +61,14 @@ export default function tabdark() {
       progressBars.forEach((progress) => {
         gsap.set(progress, { opacity: 0, x: "-100%" });
       });
-      eyebrows.forEach((brow) => {
+      tabProgressWrap.forEach((brow) => {
         gsap.set(brow, { opacity: 0 });
       });
       menuItems.forEach((item) => {
         gsap.set(item, { opacity: 0.4, height: "3.8rem" });
+      });
+      eyebrows.forEach((eyebrow) => {
+        gsap.set(eyebrow, { opacity: 0.4 });
       });
     }
 
