@@ -12,6 +12,8 @@ export default function autoTab() {
     var tabTimeout;
     var isPaused = false;
     var $tabMenu = $component.find(".w-tab-menu");
+    
+    if (!$(".autotab_section")) return; // Skip if no tab menu is found
 
     // Initial GSAP setup for all progress bars
     $component.find(".tab-hor_progress").each(function () {

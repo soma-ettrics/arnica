@@ -3,7 +3,6 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { DrawSVGPlugin } from "gsap/DrawSVGPlugin";
 
 export default function branch() {
-    console.log("branch animation init");
     gsap.registerPlugin(ScrollTrigger, DrawSVGPlugin);
 
     // Select all elements with the [data-branch] attribute
@@ -14,6 +13,8 @@ export default function branch() {
         // Select all #green SVG elements and #point circles within this branch
         const greenLines = branch.querySelectorAll("#green");
         const greenPoints = branch.querySelectorAll("#point");
+
+        if (!greenLines.length) return; // Skip if no green lines are
 
         // Loop through each #green line within the current branch
         greenLines.forEach((greenLine) => {

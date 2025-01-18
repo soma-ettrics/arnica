@@ -3,6 +3,7 @@ import { gsap } from "gsap";
 export default function logoproof() {
   // Select all hero_logoproof-item elements
   const items = document.querySelectorAll(".hero_logoproof-item");
+  if (!items.length) return; // Skip if no items are found
 
   // GSAP timeline for staggered animation
   const timeline = gsap.timeline({

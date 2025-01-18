@@ -13,11 +13,17 @@ const parceled = true
 // Import custom styles
 import "./src/styles/style.css";
 
+// Import global scripts
 import nav from "./src/global/nav";
+import branch from "./src/global/branchanim";
+import logoproof from "./src/global/logoproof";
+import autotab from "./src/global/autotab";
+autotab();
 nav();
+branch();
+logoproof();
 
-import footer from "./src/global/footer";
-footer();
+
 
 // Import page-specific scripts
 import home from "./src/pages/home/home";
