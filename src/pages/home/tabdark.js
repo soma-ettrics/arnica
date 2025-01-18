@@ -29,7 +29,7 @@ export default function tabdark() {
       progressBars.forEach((progress, index) => {
         if (index !== activeIndex) {
           gsap.to(progress, { opacity: 0, duration: 0.2 }); // Only animate opacity
-          gsap.set(progress, { x: "-100%" }); // Reset x without animation
+          gsap.set(progress, { x: "-100%" });
         }
       });
       tabProgressWrap.forEach((brow, index) => {

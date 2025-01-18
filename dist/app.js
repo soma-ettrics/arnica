@@ -7659,7 +7659,7 @@ function tabdark() {
                     }); // Only animate opacity
                     (0, _gsap.gsap).set(progress, {
                         x: "-100%"
-                    }); // Reset x without animation
+                    });
                 }
             });
             tabProgressWrap.forEach((brow, index)=>{
