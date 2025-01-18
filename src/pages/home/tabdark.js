@@ -8,7 +8,7 @@ export default function tabdark() {
     const progressBars = document.querySelectorAll(".tab-hor_progress-wrap.is-dark .tab-hor_progress");
     const tabProgressWrap = document.querySelectorAll(".tab-hor_progress-wrap.is-dark");
     const eyebrows = document.querySelectorAll(".tab-hor_eyebrow-anim .a_eyebrow");
-
+    
     // Initial state setup
     gsap.set(menuItems, { opacity: 0.4, height: "3.8rem" });
     gsap.set(progressBars, { opacity: 0, x: "-100%" });

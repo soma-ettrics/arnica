@@ -669,7 +669,7 @@ const initializePageScripts = ()=>{
 // Execute page-specific scripts
 initializePageScripts();
 
-},{"./src/styles/style.css":"cy7Le","./src/global/nav":"9emQb","./src/pages/home/home":"cIPEi","./src/pages/about/about":"fL9gf","./src/pages/work/work":"9nfro","./src/pages/services/services":"gjwHc","./src/pages/career/career":"erAwr","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./src/pages/sub-pages/integration-page":"aqRRp","./src/global/branchanim":"vOPHW","./src/global/logoproof":"5JoIt","./src/global/autotab":"gEi0T"}],"cy7Le":[function() {},{}],"9emQb":[function(require,module,exports,__globalThis) {
+},{"./src/styles/style.css":"cy7Le","./src/global/nav":"9emQb","./src/global/branchanim":"vOPHW","./src/global/logoproof":"5JoIt","./src/global/autotab":"gEi0T","./src/pages/home/home":"cIPEi","./src/pages/about/about":"fL9gf","./src/pages/work/work":"9nfro","./src/pages/services/services":"gjwHc","./src/pages/career/career":"erAwr","./src/pages/sub-pages/integration-page":"aqRRp","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"cy7Le":[function() {},{}],"9emQb":[function(require,module,exports,__globalThis) {
 // jQuery test
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
@@ -710,184 +710,71 @@ exports.export = function(dest, destName, get) {
     });
 };
 
-},{}],"cIPEi":[function(require,module,exports,__globalThis) {
+},{}],"vOPHW":[function(require,module,exports,__globalThis) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "default", ()=>home);
-var _injectSvg = require("./injectSvg");
-var _injectSvgDefault = parcelHelpers.interopDefault(_injectSvg);
-var _stats = require("../../global/stats");
-var _statsDefault = parcelHelpers.interopDefault(_stats);
-var _tabdark = require("./tabdark");
-var _tabdarkDefault = parcelHelpers.interopDefault(_tabdark);
-function home() {
-    (0, _tabdarkDefault.default)();
-    (0, _statsDefault.default)();
-    (0, _injectSvgDefault.default)();
-}
-
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./injectSvg":"2gLOp","../../global/stats":"9y0Rc","./tabdark":"8RiVW"}],"2gLOp":[function(require,module,exports,__globalThis) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "default", ()=>injectSvg);
-function injectSvg() {
-    // Select all .logo_box elements
-    const logoBoxes = document.querySelectorAll('.logo_box');
-    if (logoBoxes.length === 0) {
-        console.error('No elements found with the class .logo_box.');
-        return;
-    }
-    // Loop through each .logo_box element
-    logoBoxes.forEach((logoBox)=>{
-        // Find the <img> element inside .logo_box
-        const imgElement = logoBox.querySelector('img');
-        if (imgElement && imgElement.src) {
-            // Check if the image is an SVG
-            if (imgElement.src.endsWith('.svg')) // Fetch the SVG file from the img src
-            fetch(imgElement.src).then((response)=>{
-                if (!response.ok) throw new Error(`Network response was not ok: ${response.statusText}`);
-                return response.text();
-            }).then((svgCode)=>{
-                // Inject the fetched SVG code into the .logo_box div
-                logoBox.innerHTML = svgCode;
-            }).catch((error)=>{
-                console.error('Failed to fetch SVG:', error);
-            });
-            else console.log('Image is not an SVG, leaving it unchanged.');
-        } else console.error('No <img> element or src attribute found inside .logo_box.');
-    });
-}
-
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"9y0Rc":[function(require,module,exports,__globalThis) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "default", ()=>stats);
-var _countupJs = require("countup.js");
+parcelHelpers.export(exports, "default", ()=>branch);
 var _gsap = require("gsap");
 var _scrollTrigger = require("gsap/ScrollTrigger");
-(0, _gsap.gsap).registerPlugin((0, _scrollTrigger.ScrollTrigger));
-function stats() {
-    const statsBoxes = document.querySelectorAll(".stats_box");
-    if (statsBoxes.length === 0) return;
-    statsBoxes.forEach((box)=>{
-        const stat = box.querySelector(".stats_num");
-        if (stat) {
-            const endValue = parseFloat(stat.textContent.replace(/,/g, ''));
-            const countUp = new (0, _countupJs.CountUp)(stat, endValue, {
-                duration: 4,
-                separator: ","
+var _drawSVGPlugin = require("gsap/DrawSVGPlugin");
+function branch() {
+    (0, _gsap.gsap).registerPlugin((0, _scrollTrigger.ScrollTrigger), (0, _drawSVGPlugin.DrawSVGPlugin));
+    // Select all elements with the [data-branch] attribute
+    const branches = document.querySelectorAll("[data-branch]");
+    // Loop through each [data-branch] element
+    branches.forEach((branch)=>{
+        // Select all #green SVG elements and #point circles within this branch
+        const greenLines = branch.querySelectorAll("#green");
+        const greenPoints = branch.querySelectorAll("#point");
+        if (!greenLines.length) return; // Skip if no green lines are
+        // Loop through each #green line within the current branch
+        greenLines.forEach((greenLine)=>{
+            // Get the height of the branch and the viewport
+            const branchHeight = branch.offsetHeight;
+            const viewportHeight = window.innerHeight;
+            // Calculate the centerOffset with a minimum limit for smaller elements
+            const centerOffset = Math.max((viewportHeight - branchHeight - branchHeight / 2) / 2, 0); // Avoid negative offsets
+            // Create a timeline for this specific green line
+            const tl = (0, _gsap.gsap).timeline({
+                scrollTrigger: {
+                    trigger: branch,
+                    start: `top+=${centerOffset}px center`,
+                    end: "bottom center",
+                    scrub: true,
+                    invalidateOnRefresh: true
+                }
             });
-            (0, _scrollTrigger.ScrollTrigger).create({
-                trigger: box,
-                start: "top bottom",
-                onEnter: ()=>countUp.start()
+            // Add animation for the #green line
+            tl.fromTo(greenLine, {
+                drawSVG: "0% 0%"
+            }, {
+                drawSVG: "0% 100%",
+                duration: 2,
+                ease: "none"
             });
-        }
+            // Add animation for greenPoints (SVG circles)
+            greenPoints.forEach((point)=>{
+                (0, _gsap.gsap).fromTo(point, {
+                    opacity: 0,
+                    scale: 0
+                }, {
+                    opacity: 1,
+                    scale: 1,
+                    duration: 0.2,
+                    ease: "power4.out",
+                    scrollTrigger: {
+                        trigger: point,
+                        start: "center center",
+                        end: "center-=10 center",
+                        toggleActions: "play none reverse none"
+                    }
+                });
+            });
+        });
     });
 }
 
-},{"countup.js":"dyWzm","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","gsap":"fPSuC","gsap/ScrollTrigger":"7wnFk"}],"dyWzm":[function(require,module,exports,__globalThis) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "CountUp", ()=>i);
-var t = function() {
-    return t = Object.assign || function(t) {
-        for(var i, n = 1, s = arguments.length; n < s; n++)for(var a in i = arguments[n])Object.prototype.hasOwnProperty.call(i, a) && (t[a] = i[a]);
-        return t;
-    }, t.apply(this, arguments);
-}, i = function() {
-    function i(i, n, s) {
-        var a = this;
-        this.endVal = n, this.options = s, this.version = "2.8.0", this.defaults = {
-            startVal: 0,
-            decimalPlaces: 0,
-            duration: 2,
-            useEasing: !0,
-            useGrouping: !0,
-            useIndianSeparators: !1,
-            smartEasingThreshold: 999,
-            smartEasingAmount: 333,
-            separator: ",",
-            decimal: ".",
-            prefix: "",
-            suffix: "",
-            enableScrollSpy: !1,
-            scrollSpyDelay: 200,
-            scrollSpyOnce: !1
-        }, this.finalEndVal = null, this.useEasing = !0, this.countDown = !1, this.error = "", this.startVal = 0, this.paused = !0, this.once = !1, this.count = function(t) {
-            a.startTime || (a.startTime = t);
-            var i = t - a.startTime;
-            a.remaining = a.duration - i, a.useEasing ? a.countDown ? a.frameVal = a.startVal - a.easingFn(i, 0, a.startVal - a.endVal, a.duration) : a.frameVal = a.easingFn(i, a.startVal, a.endVal - a.startVal, a.duration) : a.frameVal = a.startVal + (a.endVal - a.startVal) * (i / a.duration);
-            var n = a.countDown ? a.frameVal < a.endVal : a.frameVal > a.endVal;
-            a.frameVal = n ? a.endVal : a.frameVal, a.frameVal = Number(a.frameVal.toFixed(a.options.decimalPlaces)), a.printValue(a.frameVal), i < a.duration ? a.rAF = requestAnimationFrame(a.count) : null !== a.finalEndVal ? a.update(a.finalEndVal) : a.options.onCompleteCallback && a.options.onCompleteCallback();
-        }, this.formatNumber = function(t) {
-            var i, n, s, e, o = t < 0 ? "-" : "";
-            i = Math.abs(t).toFixed(a.options.decimalPlaces);
-            var r = (i += "").split(".");
-            if (n = r[0], s = r.length > 1 ? a.options.decimal + r[1] : "", a.options.useGrouping) {
-                e = "";
-                for(var l = 3, h = 0, u = 0, p = n.length; u < p; ++u)a.options.useIndianSeparators && 4 === u && (l = 2, h = 1), 0 !== u && h % l == 0 && (e = a.options.separator + e), h++, e = n[p - u - 1] + e;
-                n = e;
-            }
-            return a.options.numerals && a.options.numerals.length && (n = n.replace(/[0-9]/g, function(t) {
-                return a.options.numerals[+t];
-            }), s = s.replace(/[0-9]/g, function(t) {
-                return a.options.numerals[+t];
-            })), o + a.options.prefix + n + s + a.options.suffix;
-        }, this.easeOutExpo = function(t, i, n, s) {
-            return n * (1 - Math.pow(2, -10 * t / s)) * 1024 / 1023 + i;
-        }, this.options = t(t({}, this.defaults), s), this.formattingFn = this.options.formattingFn ? this.options.formattingFn : this.formatNumber, this.easingFn = this.options.easingFn ? this.options.easingFn : this.easeOutExpo, this.startVal = this.validateValue(this.options.startVal), this.frameVal = this.startVal, this.endVal = this.validateValue(n), this.options.decimalPlaces = Math.max(this.options.decimalPlaces), this.resetDuration(), this.options.separator = String(this.options.separator), this.useEasing = this.options.useEasing, "" === this.options.separator && (this.options.useGrouping = !1), this.el = "string" == typeof i ? document.getElementById(i) : i, this.el ? this.printValue(this.startVal) : this.error = "[CountUp] target is null or undefined", "undefined" != typeof window && this.options.enableScrollSpy && (this.error ? console.error(this.error, i) : (window.onScrollFns = window.onScrollFns || [], window.onScrollFns.push(function() {
-            return a.handleScroll(a);
-        }), window.onscroll = function() {
-            window.onScrollFns.forEach(function(t) {
-                return t();
-            });
-        }, this.handleScroll(this)));
-    }
-    return i.prototype.handleScroll = function(t) {
-        if (t && window && !t.once) {
-            var i = window.innerHeight + window.scrollY, n = t.el.getBoundingClientRect(), s = n.top + window.pageYOffset, a = n.top + n.height + window.pageYOffset;
-            a < i && a > window.scrollY && t.paused ? (t.paused = !1, setTimeout(function() {
-                return t.start();
-            }, t.options.scrollSpyDelay), t.options.scrollSpyOnce && (t.once = !0)) : (window.scrollY > a || s > i) && !t.paused && t.reset();
-        }
-    }, i.prototype.determineDirectionAndSmartEasing = function() {
-        var t = this.finalEndVal ? this.finalEndVal : this.endVal;
-        this.countDown = this.startVal > t;
-        var i = t - this.startVal;
-        if (Math.abs(i) > this.options.smartEasingThreshold && this.options.useEasing) {
-            this.finalEndVal = t;
-            var n = this.countDown ? 1 : -1;
-            this.endVal = t + n * this.options.smartEasingAmount, this.duration = this.duration / 2;
-        } else this.endVal = t, this.finalEndVal = null;
-        null !== this.finalEndVal ? this.useEasing = !1 : this.useEasing = this.options.useEasing;
-    }, i.prototype.start = function(t) {
-        this.error || (this.options.onStartCallback && this.options.onStartCallback(), t && (this.options.onCompleteCallback = t), this.duration > 0 ? (this.determineDirectionAndSmartEasing(), this.paused = !1, this.rAF = requestAnimationFrame(this.count)) : this.printValue(this.endVal));
-    }, i.prototype.pauseResume = function() {
-        this.paused ? (this.startTime = null, this.duration = this.remaining, this.startVal = this.frameVal, this.determineDirectionAndSmartEasing(), this.rAF = requestAnimationFrame(this.count)) : cancelAnimationFrame(this.rAF), this.paused = !this.paused;
-    }, i.prototype.reset = function() {
-        cancelAnimationFrame(this.rAF), this.paused = !0, this.resetDuration(), this.startVal = this.validateValue(this.options.startVal), this.frameVal = this.startVal, this.printValue(this.startVal);
-    }, i.prototype.update = function(t) {
-        cancelAnimationFrame(this.rAF), this.startTime = null, this.endVal = this.validateValue(t), this.endVal !== this.frameVal && (this.startVal = this.frameVal, null == this.finalEndVal && this.resetDuration(), this.finalEndVal = null, this.determineDirectionAndSmartEasing(), this.rAF = requestAnimationFrame(this.count));
-    }, i.prototype.printValue = function(t) {
-        var i;
-        if (this.el) {
-            var n = this.formattingFn(t);
-            if (null === (i = this.options.plugin) || void 0 === i ? void 0 : i.render) this.options.plugin.render(this.el, n);
-            else if ("INPUT" === this.el.tagName) this.el.value = n;
-            else "text" === this.el.tagName || "tspan" === this.el.tagName ? this.el.textContent = n : this.el.innerHTML = n;
-        }
-    }, i.prototype.ensureNumber = function(t) {
-        return "number" == typeof t && !isNaN(t);
-    }, i.prototype.validateValue = function(t) {
-        var i = Number(t);
-        return this.ensureNumber(i) ? i : (this.error = "[CountUp] invalid start or end value: ".concat(t), null);
-    }, i.prototype.resetDuration = function() {
-        this.startTime = null, this.duration = 1e3 * Number(this.options.duration), this.remaining = this.duration;
-    }, i;
-}();
-
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"fPSuC":[function(require,module,exports,__globalThis) {
+},{"gsap":"fPSuC","gsap/ScrollTrigger":"7wnFk","gsap/DrawSVGPlugin":"htWnw","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"fPSuC":[function(require,module,exports,__globalThis) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "gsap", ()=>gsapWithCSS);
@@ -7135,266 +7022,7 @@ Observer.getById = function(id) {
 };
 _getGSAP() && gsap.registerPlugin(Observer);
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"8RiVW":[function(require,module,exports,__globalThis) {
-// GSAP animation for looping through .half-tab_menu-item and .halftabtabProgressWrap
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "default", ()=>tabdark);
-var _gsap = require("gsap");
-function tabdark() {
-    document.addEventListener("DOMContentLoaded", ()=>{
-        // Select all necessary elements
-        const menuItems = document.querySelectorAll(".half-tab_menu-item");
-        const progressBars = document.querySelectorAll(".tab-hor_progress-wrap.is-dark .tab-hor_progress");
-        const tabProgressWrap = document.querySelectorAll(".tab-hor_progress-wrap.is-dark");
-        const eyebrows = document.querySelectorAll(".tab-hor_eyebrow-anim .a_eyebrow");
-        // Initial state setup
-        (0, _gsap.gsap).set(menuItems, {
-            opacity: 0.4,
-            height: "3.8rem"
-        });
-        (0, _gsap.gsap).set(progressBars, {
-            opacity: 0,
-            x: "-100%"
-        });
-        (0, _gsap.gsap).set(tabProgressWrap, {
-            opacity: 0
-        });
-        (0, _gsap.gsap).set(eyebrows, {
-            opacity: 0.4
-        });
-        let activeIndex = 0;
-        let animationInterval;
-        // Function to animate the active item
-        function animateActiveItem() {
-            // Reset all items, progress bars, and eyebrows
-            menuItems.forEach((item, index)=>{
-                if (index !== activeIndex) (0, _gsap.gsap).to(item, {
-                    opacity: 0.4,
-                    height: "3.8rem",
-                    duration: 0.3
-                });
-            });
-            progressBars.forEach((progress, index)=>{
-                if (index !== activeIndex) {
-                    (0, _gsap.gsap).to(progress, {
-                        opacity: 0,
-                        duration: 0.2
-                    }); // Only animate opacity
-                    (0, _gsap.gsap).set(progress, {
-                        x: "-100%"
-                    });
-                }
-            });
-            tabProgressWrap.forEach((brow, index)=>{
-                if (index !== activeIndex) (0, _gsap.gsap).to(brow, {
-                    opacity: 0,
-                    duration: 0.3
-                });
-            });
-            eyebrows.forEach((eyebrow, index)=>{
-                if (index !== activeIndex) (0, _gsap.gsap).to(eyebrow, {
-                    opacity: 0.4,
-                    duration: 0.3
-                });
-            });
-            // Animate the active item
-            const activeItem = menuItems[activeIndex];
-            const activeProgressBar = progressBars[activeIndex];
-            const activeEyebrowWrap = tabProgressWrap[activeIndex];
-            const activeEyebrow = eyebrows[activeIndex];
-            (0, _gsap.gsap).to(activeItem, {
-                opacity: 1,
-                height: "auto",
-                duration: 0.3
-            });
-            (0, _gsap.gsap).to(activeProgressBar, {
-                opacity: 1,
-                duration: 0.3
-            }); // Reveal progress bar opacity
-            (0, _gsap.gsap).to(activeProgressBar, {
-                x: "0%",
-                duration: 7,
-                ease: "linear"
-            }); // Animate x
-            (0, _gsap.gsap).to(activeEyebrowWrap, {
-                opacity: 1,
-                duration: 0.3
-            });
-            (0, _gsap.gsap).to(activeEyebrow, {
-                opacity: 1,
-                duration: 0.3
-            }); // Highlight active eyebrow
-        }
-        // Function to reset animations after click
-        function resetAnimations() {
-            progressBars.forEach((progress)=>{
-                (0, _gsap.gsap).set(progress, {
-                    opacity: 0,
-                    x: "-100%"
-                });
-            });
-            tabProgressWrap.forEach((brow)=>{
-                (0, _gsap.gsap).set(brow, {
-                    opacity: 0
-                });
-            });
-            menuItems.forEach((item)=>{
-                (0, _gsap.gsap).set(item, {
-                    opacity: 0.4,
-                    height: "3.8rem"
-                });
-            });
-            eyebrows.forEach((eyebrow)=>{
-                (0, _gsap.gsap).set(eyebrow, {
-                    opacity: 0.4
-                });
-            });
-        }
-        // Function to stop animations
-        function stopAnimations() {
-            (0, _gsap.gsap).globalTimeline.pause();
-            clearInterval(animationInterval);
-        }
-        // Function to start animations
-        function startAnimations() {
-            (0, _gsap.gsap).globalTimeline.resume();
-            clearInterval(animationInterval);
-            animationInterval = setInterval(()=>{
-                activeIndex = (activeIndex + 1) % menuItems.length;
-                animateActiveItem();
-            }, 7000);
-        }
-        // Add hover listeners to stop animations
-        menuItems.forEach((item, index)=>{
-            item.addEventListener("mouseenter", ()=>{
-                if (index === activeIndex) stopAnimations();
-            });
-            item.addEventListener("mouseleave", ()=>{
-                if (index === activeIndex) startAnimations();
-            });
-        });
-        // Add click listener to switch active tab
-        menuItems.forEach((item, index)=>{
-            item.addEventListener("click", ()=>{
-                stopAnimations();
-                resetAnimations(); // Reset all animations before applying new state
-                activeIndex = index; // Set active index to the clicked item
-                animateActiveItem(); // Trigger the animation
-                startAnimations(); // Restart the interval
-            });
-        });
-        // Start the animation loop
-        animateActiveItem(); // Initial animation
-        animationInterval = setInterval(()=>{
-            activeIndex = (activeIndex + 1) % menuItems.length;
-            animateActiveItem();
-        }, 7000); // Repeat every 7 seconds
-    });
-}
-
-},{"gsap":"fPSuC","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"fL9gf":[function(require,module,exports,__globalThis) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-function about() {}
-exports.default = about;
-
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"9nfro":[function(require,module,exports,__globalThis) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-function work() {}
-exports.default = work;
-
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"gjwHc":[function(require,module,exports,__globalThis) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-function services() {}
-exports.default = services;
-
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"erAwr":[function(require,module,exports,__globalThis) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-function career() {}
-exports.default = career;
-
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"aqRRp":[function(require,module,exports,__globalThis) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "default", ()=>integration);
-var _branchanim = require("../../global/branchanim");
-var _branchanimDefault = parcelHelpers.interopDefault(_branchanim);
-var _autotab = require("../../global/autotab");
-var _autotabDefault = parcelHelpers.interopDefault(_autotab);
-function integration() {
-    (0, _branchanimDefault.default)();
-    (0, _autotabDefault.default)();
-}
-
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","../../global/branchanim":"vOPHW","../../global/autotab":"gEi0T"}],"vOPHW":[function(require,module,exports,__globalThis) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "default", ()=>branch);
-var _gsap = require("gsap");
-var _scrollTrigger = require("gsap/ScrollTrigger");
-var _drawSVGPlugin = require("gsap/DrawSVGPlugin");
-function branch() {
-    (0, _gsap.gsap).registerPlugin((0, _scrollTrigger.ScrollTrigger), (0, _drawSVGPlugin.DrawSVGPlugin));
-    // Select all elements with the [data-branch] attribute
-    const branches = document.querySelectorAll("[data-branch]");
-    // Loop through each [data-branch] element
-    branches.forEach((branch)=>{
-        // Select all #green SVG elements and #point circles within this branch
-        const greenLines = branch.querySelectorAll("#green");
-        const greenPoints = branch.querySelectorAll("#point");
-        if (!greenLines.length) return; // Skip if no green lines are
-        // Loop through each #green line within the current branch
-        greenLines.forEach((greenLine)=>{
-            // Get the height of the branch and the viewport
-            const branchHeight = branch.offsetHeight;
-            const viewportHeight = window.innerHeight;
-            // Calculate the centerOffset with a minimum limit for smaller elements
-            const centerOffset = Math.max((viewportHeight - branchHeight - branchHeight / 2) / 2, 0); // Avoid negative offsets
-            // Create a timeline for this specific green line
-            const tl = (0, _gsap.gsap).timeline({
-                scrollTrigger: {
-                    trigger: branch,
-                    start: `top+=${centerOffset}px center`,
-                    end: "bottom center",
-                    scrub: true,
-                    invalidateOnRefresh: true
-                }
-            });
-            // Add animation for the #green line
-            tl.fromTo(greenLine, {
-                drawSVG: "0% 0%"
-            }, {
-                drawSVG: "0% 100%",
-                duration: 2,
-                ease: "none"
-            });
-            // Add animation for greenPoints (SVG circles)
-            greenPoints.forEach((point)=>{
-                (0, _gsap.gsap).fromTo(point, {
-                    opacity: 0,
-                    scale: 0
-                }, {
-                    opacity: 1,
-                    scale: 1,
-                    duration: 0.2,
-                    ease: "power4.out",
-                    scrollTrigger: {
-                        trigger: point,
-                        start: "center center",
-                        end: "center-=10 center",
-                        toggleActions: "play none reverse none"
-                    }
-                });
-            });
-        });
-    });
-}
-
-},{"gsap":"fPSuC","gsap/ScrollTrigger":"7wnFk","gsap/DrawSVGPlugin":"htWnw","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"htWnw":[function(require,module,exports,__globalThis) {
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"htWnw":[function(require,module,exports,__globalThis) {
 /*!
  * DrawSVGPlugin 3.12.5
  * https://gsap.com
@@ -7625,7 +7253,58 @@ var DrawSVGPlugin = {
 };
 _getGSAP() && gsap.registerPlugin(DrawSVGPlugin);
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"gEi0T":[function(require,module,exports,__globalThis) {
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"5JoIt":[function(require,module,exports,__globalThis) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "default", ()=>logoproof);
+var _gsap = require("gsap");
+function logoproof() {
+    // Select all hero_logoproof-item elements
+    const items = document.querySelectorAll(".hero_logoproof-item");
+    if (!items.length) return; // Skip if no items are found
+    // GSAP timeline for staggered animation
+    const timeline = (0, _gsap.gsap).timeline({
+        repeat: -1,
+        defaults: {
+            duration: 1,
+            ease: "power4.inOut"
+        }
+    });
+    timeline.to(items, {
+        onStart: ()=>{
+            // Stagger animation for both active and second logos
+            items.forEach((item, index)=>{
+                const imgs = item.querySelectorAll(".hero_logoproof-img");
+                (0, _gsap.gsap).to(imgs, {
+                    y: "-100%",
+                    duration: 1,
+                    ease: "power4.inOut",
+                    delay: index * 0.07
+                });
+            });
+        },
+        stagger: 0.1,
+        onComplete: ()=>{
+            // Reset positions when animation is complete
+            items.forEach((item)=>{
+                const imgs = item.querySelectorAll(".hero_logoproof-img");
+                const firstImg = imgs[0];
+                const secondImg = imgs[1];
+                // Swap the "is-2" class to indicate active logo
+                firstImg.classList.add("is-2");
+                secondImg.classList.remove("is-2");
+                // Reorder the DOM elements for seamless looping
+                item.appendChild(firstImg);
+                // Reset the individual images to their starting positions
+                (0, _gsap.gsap).set(imgs, {
+                    y: "0"
+                });
+            });
+        }
+    }, "+=4");
+}
+
+},{"gsap":"fPSuC","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"gEi0T":[function(require,module,exports,__globalThis) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "default", ()=>autoTab);
@@ -7748,57 +7427,378 @@ function autoTab() {
     });
 }
 
-},{"gsap":"fPSuC","gsap/ScrollTrigger":"7wnFk","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"5JoIt":[function(require,module,exports,__globalThis) {
+},{"gsap":"fPSuC","gsap/ScrollTrigger":"7wnFk","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"cIPEi":[function(require,module,exports,__globalThis) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "default", ()=>logoproof);
-var _gsap = require("gsap");
-function logoproof() {
-    // Select all hero_logoproof-item elements
-    const items = document.querySelectorAll(".hero_logoproof-item");
-    if (!items.length) return; // Skip if no items are found
-    // GSAP timeline for staggered animation
-    const timeline = (0, _gsap.gsap).timeline({
-        repeat: -1,
-        defaults: {
-            duration: 1,
-            ease: "power4.inOut"
-        }
-    });
-    timeline.to(items, {
-        onStart: ()=>{
-            // Stagger animation for both active and second logos
-            items.forEach((item, index)=>{
-                const imgs = item.querySelectorAll(".hero_logoproof-img");
-                (0, _gsap.gsap).to(imgs, {
-                    y: "-100%",
-                    duration: 1,
-                    ease: "power4.inOut",
-                    delay: index * 0.07
-                });
-            });
-        },
-        stagger: 0.1,
-        onComplete: ()=>{
-            // Reset positions when animation is complete
-            items.forEach((item)=>{
-                const imgs = item.querySelectorAll(".hero_logoproof-img");
-                const firstImg = imgs[0];
-                const secondImg = imgs[1];
-                // Swap the "is-2" class to indicate active logo
-                firstImg.classList.add("is-2");
-                secondImg.classList.remove("is-2");
-                // Reorder the DOM elements for seamless looping
-                item.appendChild(firstImg);
-                // Reset the individual images to their starting positions
-                (0, _gsap.gsap).set(imgs, {
-                    y: "0"
-                });
-            });
-        }
-    }, "+=4");
+parcelHelpers.export(exports, "default", ()=>home);
+var _injectSvg = require("./injectSvg");
+var _injectSvgDefault = parcelHelpers.interopDefault(_injectSvg);
+var _stats = require("../../global/stats");
+var _statsDefault = parcelHelpers.interopDefault(_stats);
+var _tabdark = require("./tabdark");
+var _tabdarkDefault = parcelHelpers.interopDefault(_tabdark);
+function home() {
+    (0, _tabdarkDefault.default)();
+    (0, _statsDefault.default)();
+    (0, _injectSvgDefault.default)();
 }
 
-},{"gsap":"fPSuC","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}]},["jQqog","igcvL"], "igcvL", "parcelRequire94c2")
+},{"./injectSvg":"2gLOp","../../global/stats":"9y0Rc","./tabdark":"8RiVW","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"2gLOp":[function(require,module,exports,__globalThis) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "default", ()=>injectSvg);
+function injectSvg() {
+    // Select all .logo_box elements
+    const logoBoxes = document.querySelectorAll('.logo_box');
+    if (logoBoxes.length === 0) {
+        console.error('No elements found with the class .logo_box.');
+        return;
+    }
+    // Loop through each .logo_box element
+    logoBoxes.forEach((logoBox)=>{
+        // Find the <img> element inside .logo_box
+        const imgElement = logoBox.querySelector('img');
+        if (imgElement && imgElement.src) {
+            // Check if the image is an SVG
+            if (imgElement.src.endsWith('.svg')) // Fetch the SVG file from the img src
+            fetch(imgElement.src).then((response)=>{
+                if (!response.ok) throw new Error(`Network response was not ok: ${response.statusText}`);
+                return response.text();
+            }).then((svgCode)=>{
+                // Inject the fetched SVG code into the .logo_box div
+                logoBox.innerHTML = svgCode;
+            }).catch((error)=>{
+                console.error('Failed to fetch SVG:', error);
+            });
+            else console.log('Image is not an SVG, leaving it unchanged.');
+        } else console.error('No <img> element or src attribute found inside .logo_box.');
+    });
+}
+
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"9y0Rc":[function(require,module,exports,__globalThis) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "default", ()=>stats);
+var _countupJs = require("countup.js");
+var _gsap = require("gsap");
+var _scrollTrigger = require("gsap/ScrollTrigger");
+(0, _gsap.gsap).registerPlugin((0, _scrollTrigger.ScrollTrigger));
+function stats() {
+    const statsBoxes = document.querySelectorAll(".stats_box");
+    if (statsBoxes.length === 0) return;
+    statsBoxes.forEach((box)=>{
+        const stat = box.querySelector(".stats_num");
+        if (stat) {
+            const endValue = parseFloat(stat.textContent.replace(/,/g, ''));
+            const countUp = new (0, _countupJs.CountUp)(stat, endValue, {
+                duration: 4,
+                separator: ","
+            });
+            (0, _scrollTrigger.ScrollTrigger).create({
+                trigger: box,
+                start: "top bottom",
+                onEnter: ()=>countUp.start()
+            });
+        }
+    });
+}
+
+},{"countup.js":"dyWzm","gsap":"fPSuC","gsap/ScrollTrigger":"7wnFk","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"dyWzm":[function(require,module,exports,__globalThis) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "CountUp", ()=>i);
+var t = function() {
+    return t = Object.assign || function(t) {
+        for(var i, n = 1, s = arguments.length; n < s; n++)for(var a in i = arguments[n])Object.prototype.hasOwnProperty.call(i, a) && (t[a] = i[a]);
+        return t;
+    }, t.apply(this, arguments);
+}, i = function() {
+    function i(i, n, s) {
+        var a = this;
+        this.endVal = n, this.options = s, this.version = "2.8.0", this.defaults = {
+            startVal: 0,
+            decimalPlaces: 0,
+            duration: 2,
+            useEasing: !0,
+            useGrouping: !0,
+            useIndianSeparators: !1,
+            smartEasingThreshold: 999,
+            smartEasingAmount: 333,
+            separator: ",",
+            decimal: ".",
+            prefix: "",
+            suffix: "",
+            enableScrollSpy: !1,
+            scrollSpyDelay: 200,
+            scrollSpyOnce: !1
+        }, this.finalEndVal = null, this.useEasing = !0, this.countDown = !1, this.error = "", this.startVal = 0, this.paused = !0, this.once = !1, this.count = function(t) {
+            a.startTime || (a.startTime = t);
+            var i = t - a.startTime;
+            a.remaining = a.duration - i, a.useEasing ? a.countDown ? a.frameVal = a.startVal - a.easingFn(i, 0, a.startVal - a.endVal, a.duration) : a.frameVal = a.easingFn(i, a.startVal, a.endVal - a.startVal, a.duration) : a.frameVal = a.startVal + (a.endVal - a.startVal) * (i / a.duration);
+            var n = a.countDown ? a.frameVal < a.endVal : a.frameVal > a.endVal;
+            a.frameVal = n ? a.endVal : a.frameVal, a.frameVal = Number(a.frameVal.toFixed(a.options.decimalPlaces)), a.printValue(a.frameVal), i < a.duration ? a.rAF = requestAnimationFrame(a.count) : null !== a.finalEndVal ? a.update(a.finalEndVal) : a.options.onCompleteCallback && a.options.onCompleteCallback();
+        }, this.formatNumber = function(t) {
+            var i, n, s, e, o = t < 0 ? "-" : "";
+            i = Math.abs(t).toFixed(a.options.decimalPlaces);
+            var r = (i += "").split(".");
+            if (n = r[0], s = r.length > 1 ? a.options.decimal + r[1] : "", a.options.useGrouping) {
+                e = "";
+                for(var l = 3, h = 0, u = 0, p = n.length; u < p; ++u)a.options.useIndianSeparators && 4 === u && (l = 2, h = 1), 0 !== u && h % l == 0 && (e = a.options.separator + e), h++, e = n[p - u - 1] + e;
+                n = e;
+            }
+            return a.options.numerals && a.options.numerals.length && (n = n.replace(/[0-9]/g, function(t) {
+                return a.options.numerals[+t];
+            }), s = s.replace(/[0-9]/g, function(t) {
+                return a.options.numerals[+t];
+            })), o + a.options.prefix + n + s + a.options.suffix;
+        }, this.easeOutExpo = function(t, i, n, s) {
+            return n * (1 - Math.pow(2, -10 * t / s)) * 1024 / 1023 + i;
+        }, this.options = t(t({}, this.defaults), s), this.formattingFn = this.options.formattingFn ? this.options.formattingFn : this.formatNumber, this.easingFn = this.options.easingFn ? this.options.easingFn : this.easeOutExpo, this.startVal = this.validateValue(this.options.startVal), this.frameVal = this.startVal, this.endVal = this.validateValue(n), this.options.decimalPlaces = Math.max(this.options.decimalPlaces), this.resetDuration(), this.options.separator = String(this.options.separator), this.useEasing = this.options.useEasing, "" === this.options.separator && (this.options.useGrouping = !1), this.el = "string" == typeof i ? document.getElementById(i) : i, this.el ? this.printValue(this.startVal) : this.error = "[CountUp] target is null or undefined", "undefined" != typeof window && this.options.enableScrollSpy && (this.error ? console.error(this.error, i) : (window.onScrollFns = window.onScrollFns || [], window.onScrollFns.push(function() {
+            return a.handleScroll(a);
+        }), window.onscroll = function() {
+            window.onScrollFns.forEach(function(t) {
+                return t();
+            });
+        }, this.handleScroll(this)));
+    }
+    return i.prototype.handleScroll = function(t) {
+        if (t && window && !t.once) {
+            var i = window.innerHeight + window.scrollY, n = t.el.getBoundingClientRect(), s = n.top + window.pageYOffset, a = n.top + n.height + window.pageYOffset;
+            a < i && a > window.scrollY && t.paused ? (t.paused = !1, setTimeout(function() {
+                return t.start();
+            }, t.options.scrollSpyDelay), t.options.scrollSpyOnce && (t.once = !0)) : (window.scrollY > a || s > i) && !t.paused && t.reset();
+        }
+    }, i.prototype.determineDirectionAndSmartEasing = function() {
+        var t = this.finalEndVal ? this.finalEndVal : this.endVal;
+        this.countDown = this.startVal > t;
+        var i = t - this.startVal;
+        if (Math.abs(i) > this.options.smartEasingThreshold && this.options.useEasing) {
+            this.finalEndVal = t;
+            var n = this.countDown ? 1 : -1;
+            this.endVal = t + n * this.options.smartEasingAmount, this.duration = this.duration / 2;
+        } else this.endVal = t, this.finalEndVal = null;
+        null !== this.finalEndVal ? this.useEasing = !1 : this.useEasing = this.options.useEasing;
+    }, i.prototype.start = function(t) {
+        this.error || (this.options.onStartCallback && this.options.onStartCallback(), t && (this.options.onCompleteCallback = t), this.duration > 0 ? (this.determineDirectionAndSmartEasing(), this.paused = !1, this.rAF = requestAnimationFrame(this.count)) : this.printValue(this.endVal));
+    }, i.prototype.pauseResume = function() {
+        this.paused ? (this.startTime = null, this.duration = this.remaining, this.startVal = this.frameVal, this.determineDirectionAndSmartEasing(), this.rAF = requestAnimationFrame(this.count)) : cancelAnimationFrame(this.rAF), this.paused = !this.paused;
+    }, i.prototype.reset = function() {
+        cancelAnimationFrame(this.rAF), this.paused = !0, this.resetDuration(), this.startVal = this.validateValue(this.options.startVal), this.frameVal = this.startVal, this.printValue(this.startVal);
+    }, i.prototype.update = function(t) {
+        cancelAnimationFrame(this.rAF), this.startTime = null, this.endVal = this.validateValue(t), this.endVal !== this.frameVal && (this.startVal = this.frameVal, null == this.finalEndVal && this.resetDuration(), this.finalEndVal = null, this.determineDirectionAndSmartEasing(), this.rAF = requestAnimationFrame(this.count));
+    }, i.prototype.printValue = function(t) {
+        var i;
+        if (this.el) {
+            var n = this.formattingFn(t);
+            if (null === (i = this.options.plugin) || void 0 === i ? void 0 : i.render) this.options.plugin.render(this.el, n);
+            else if ("INPUT" === this.el.tagName) this.el.value = n;
+            else "text" === this.el.tagName || "tspan" === this.el.tagName ? this.el.textContent = n : this.el.innerHTML = n;
+        }
+    }, i.prototype.ensureNumber = function(t) {
+        return "number" == typeof t && !isNaN(t);
+    }, i.prototype.validateValue = function(t) {
+        var i = Number(t);
+        return this.ensureNumber(i) ? i : (this.error = "[CountUp] invalid start or end value: ".concat(t), null);
+    }, i.prototype.resetDuration = function() {
+        this.startTime = null, this.duration = 1e3 * Number(this.options.duration), this.remaining = this.duration;
+    }, i;
+}();
+
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"8RiVW":[function(require,module,exports,__globalThis) {
+// GSAP animation for looping through .half-tab_menu-item and .halftabtabProgressWrap
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "default", ()=>tabdark);
+var _gsap = require("gsap");
+function tabdark() {
+    document.addEventListener("DOMContentLoaded", ()=>{
+        // Select all necessary elements
+        const menuItems = document.querySelectorAll(".half-tab_menu-item");
+        const progressBars = document.querySelectorAll(".tab-hor_progress-wrap.is-dark .tab-hor_progress");
+        const tabProgressWrap = document.querySelectorAll(".tab-hor_progress-wrap.is-dark");
+        const eyebrows = document.querySelectorAll(".tab-hor_eyebrow-anim .a_eyebrow");
+        // Initial state setup
+        (0, _gsap.gsap).set(menuItems, {
+            opacity: 0.4,
+            height: "3.8rem"
+        });
+        (0, _gsap.gsap).set(progressBars, {
+            opacity: 0,
+            x: "-100%"
+        });
+        (0, _gsap.gsap).set(tabProgressWrap, {
+            opacity: 0
+        });
+        (0, _gsap.gsap).set(eyebrows, {
+            opacity: 0.4
+        });
+        let activeIndex = 0;
+        let animationInterval;
+        // Function to animate the active item
+        function animateActiveItem() {
+            // Reset all items, progress bars, and eyebrows
+            menuItems.forEach((item, index)=>{
+                if (index !== activeIndex) (0, _gsap.gsap).to(item, {
+                    opacity: 0.4,
+                    height: "3.8rem",
+                    duration: 0.3
+                });
+            });
+            progressBars.forEach((progress, index)=>{
+                if (index !== activeIndex) {
+                    (0, _gsap.gsap).to(progress, {
+                        opacity: 0,
+                        duration: 0.2
+                    }); // Only animate opacity
+                    (0, _gsap.gsap).set(progress, {
+                        x: "-100%"
+                    });
+                }
+            });
+            tabProgressWrap.forEach((brow, index)=>{
+                if (index !== activeIndex) (0, _gsap.gsap).to(brow, {
+                    opacity: 0,
+                    duration: 0.3
+                });
+            });
+            eyebrows.forEach((eyebrow, index)=>{
+                if (index !== activeIndex) (0, _gsap.gsap).to(eyebrow, {
+                    opacity: 0.4,
+                    duration: 0.3
+                });
+            });
+            // Animate the active item
+            const activeItem = menuItems[activeIndex];
+            const activeProgressBar = progressBars[activeIndex];
+            const activeEyebrowWrap = tabProgressWrap[activeIndex];
+            const activeEyebrow = eyebrows[activeIndex];
+            (0, _gsap.gsap).to(activeItem, {
+                opacity: 1,
+                height: "auto",
+                duration: 0.3
+            });
+            (0, _gsap.gsap).to(activeProgressBar, {
+                opacity: 1,
+                duration: 0.3
+            }); // Reveal progress bar opacity
+            (0, _gsap.gsap).to(activeProgressBar, {
+                x: "0%",
+                duration: 7,
+                ease: "linear"
+            }); // Animate x
+            (0, _gsap.gsap).to(activeEyebrowWrap, {
+                opacity: 1,
+                duration: 0.3
+            });
+            (0, _gsap.gsap).to(activeEyebrow, {
+                opacity: 1,
+                duration: 0.3
+            }); // Highlight active eyebrow
+        }
+        // Function to reset animations after click
+        function resetAnimations() {
+            progressBars.forEach((progress)=>{
+                (0, _gsap.gsap).set(progress, {
+                    opacity: 0,
+                    x: "-100%"
+                });
+            });
+            tabProgressWrap.forEach((brow)=>{
+                (0, _gsap.gsap).set(brow, {
+                    opacity: 0
+                });
+            });
+            menuItems.forEach((item)=>{
+                (0, _gsap.gsap).set(item, {
+                    opacity: 0.4,
+                    height: "3.8rem"
+                });
+            });
+            eyebrows.forEach((eyebrow)=>{
+                (0, _gsap.gsap).set(eyebrow, {
+                    opacity: 0.4
+                });
+            });
+        }
+        // Function to stop animations
+        function stopAnimations() {
+            (0, _gsap.gsap).globalTimeline.pause();
+            clearInterval(animationInterval);
+        }
+        // Function to start animations
+        function startAnimations() {
+            (0, _gsap.gsap).globalTimeline.resume();
+            clearInterval(animationInterval);
+            animationInterval = setInterval(()=>{
+                activeIndex = (activeIndex + 1) % menuItems.length;
+                animateActiveItem();
+            }, 7000);
+        }
+        // Add hover listeners to stop animations
+        menuItems.forEach((item, index)=>{
+            item.addEventListener("mouseenter", ()=>{
+                if (index === activeIndex) stopAnimations();
+            });
+            item.addEventListener("mouseleave", ()=>{
+                if (index === activeIndex) startAnimations();
+            });
+        });
+        // Add click listener to switch active tab
+        menuItems.forEach((item, index)=>{
+            item.addEventListener("click", ()=>{
+                stopAnimations();
+                resetAnimations(); // Reset all animations before applying new state
+                activeIndex = index; // Set active index to the clicked item
+                animateActiveItem(); // Trigger the animation
+                startAnimations(); // Restart the interval
+            });
+        });
+        // Start the animation loop
+        animateActiveItem(); // Initial animation
+        animationInterval = setInterval(()=>{
+            activeIndex = (activeIndex + 1) % menuItems.length;
+            animateActiveItem();
+        }, 7000); // Repeat every 7 seconds
+    });
+}
+
+},{"gsap":"fPSuC","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"fL9gf":[function(require,module,exports,__globalThis) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+function about() {}
+exports.default = about;
+
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"9nfro":[function(require,module,exports,__globalThis) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+function work() {}
+exports.default = work;
+
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"gjwHc":[function(require,module,exports,__globalThis) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+function services() {}
+exports.default = services;
+
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"erAwr":[function(require,module,exports,__globalThis) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+function career() {}
+exports.default = career;
+
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"aqRRp":[function(require,module,exports,__globalThis) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "default", ()=>integration);
+var _branchanim = require("../../global/branchanim");
+var _branchanimDefault = parcelHelpers.interopDefault(_branchanim);
+var _autotab = require("../../global/autotab");
+var _autotabDefault = parcelHelpers.interopDefault(_autotab);
+function integration() {
+    (0, _branchanimDefault.default)();
+    (0, _autotabDefault.default)();
+}
+
+},{"../../global/branchanim":"vOPHW","../../global/autotab":"gEi0T","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}]},["jQqog","igcvL"], "igcvL", "parcelRequire94c2")
 
 //# sourceMappingURL=app.js.map
