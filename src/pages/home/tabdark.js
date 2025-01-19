@@ -3,6 +3,8 @@ import { gsap } from "gsap";
 
 export default function tabdark() {
   document.addEventListener("DOMContentLoaded", () => {
+
+    console.log("Tabdark script loaded");
     // Select all necessary elements
     const menuItems = document.querySelectorAll(".half-tab_menu-item");
     const progressBars = document.querySelectorAll(".tab-hor_progress-wrap.is-dark .tab-hor_progress");
@@ -20,6 +22,7 @@ export default function tabdark() {
 
     // Function to animate the active item
     function animateActiveItem() {
+      console.log("Animating active item");
       // Reset all items, progress bars, and eyebrows
       menuItems.forEach((item, index) => {
         if (index !== activeIndex) {

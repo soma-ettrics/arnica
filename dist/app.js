@@ -7612,6 +7612,7 @@ parcelHelpers.export(exports, "default", ()=>tabdark);
 var _gsap = require("gsap");
 function tabdark() {
     document.addEventListener("DOMContentLoaded", ()=>{
+        console.log("Tabdark script loaded");
         // Select all necessary elements
         const menuItems = document.querySelectorAll(".half-tab_menu-item");
         const progressBars = document.querySelectorAll(".tab-hor_progress-wrap.is-dark .tab-hor_progress");
@@ -7636,6 +7637,7 @@ function tabdark() {
         let animationInterval;
         // Function to animate the active item
         function animateActiveItem() {
+            console.log("Animating active item");
             // Reset all items, progress bars, and eyebrows
             menuItems.forEach((item, index)=>{
                 if (index !== activeIndex) (0, _gsap.gsap).to(item, {
