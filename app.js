@@ -18,14 +18,11 @@ import nav from "./src/global/nav";
 import branch from "./src/global/branchanim";
 import logoproof from "./src/global/logoproof";
 import autotab from "./src/global/autotab";
-import tabdark from "./src/pages/home/tabdark";
 
 autotab();
 nav();
 branch();
 logoproof();
-tabdark();
-
 
 // Import page-specific scripts
 import home from "./src/pages/home/home";

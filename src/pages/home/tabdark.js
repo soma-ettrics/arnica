@@ -2,7 +2,6 @@
 import { gsap } from "gsap";
 
 export default function tabdark() {
-  document.addEventListener("DOMContentLoaded", () => {
 
     console.log("Tabdark script loaded");
     // Select all necessary elements
@@ -122,5 +121,4 @@ export default function tabdark() {
       activeIndex = (activeIndex + 1) % menuItems.length;
       animateActiveItem();
     }, 7000); // Repeat every 7 seconds
-  });
 }
