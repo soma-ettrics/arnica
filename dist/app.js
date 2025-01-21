@@ -7605,163 +7605,126 @@ var t = function() {
 }();
 
 },{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"8RiVW":[function(require,module,exports,__globalThis) {
-// GSAP animation for looping through .half-tab_menu-item and .halftabtabProgressWrap
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "default", ()=>tabdark);
 var _gsap = require("gsap");
 function tabdark() {
-    document.addEventListener("DOMContentLoaded", ()=>{
-        console.log("Tabdark script loaded");
-        // Select all necessary elements
-        const menuItems = document.querySelectorAll(".half-tab_menu-item");
-        const progressBars = document.querySelectorAll(".tab-hor_progress-wrap.is-dark .tab-hor_progress");
-        const tabProgressWrap = document.querySelectorAll(".tab-hor_progress-wrap.is-dark");
-        const eyebrows = document.querySelectorAll(".tab-hor_eyebrow-anim .a_eyebrow");
-        // Initial state setup
-        (0, _gsap.gsap).set(menuItems, {
-            opacity: 0.4,
-            height: "3.8rem"
-        });
-        (0, _gsap.gsap).set(progressBars, {
-            opacity: 0,
-            x: "-100%"
-        });
-        (0, _gsap.gsap).set(tabProgressWrap, {
-            opacity: 0
-        });
-        (0, _gsap.gsap).set(eyebrows, {
-            opacity: 0.4
-        });
-        let activeIndex = 0;
-        let animationInterval;
-        // Function to animate the active item
-        function animateActiveItem() {
-            console.log("Animating active item");
-            // Reset all items, progress bars, and eyebrows
-            menuItems.forEach((item, index)=>{
-                if (index !== activeIndex) (0, _gsap.gsap).to(item, {
-                    opacity: 0.4,
-                    height: "3.8rem",
-                    duration: 0.3
-                });
+    // Select all necessary elements
+    const progressBars = document.querySelectorAll(".tab-hor_progress-wrap.is-dark .tab-hor_progress");
+    const tabProgressWraps = document.querySelectorAll(".tab-hor_progress-wrap.is-dark");
+    const tabContentItems = document.querySelectorAll(".half-tab_content");
+    const eyebrows = document.querySelectorAll(".tab2_menu-item");
+    const menuItems = document.querySelectorAll(".half-tab_menu-item");
+    // Set initial states using GSAP
+    (0, _gsap.gsap).set(eyebrows, {
+        opacity: 0.5
+    });
+    (0, _gsap.gsap).set(tabContentItems, {
+        opacity: 0
+    });
+    (0, _gsap.gsap).set(tabProgressWraps, {
+        opacity: 0
+    });
+    (0, _gsap.gsap).set(menuItems, {
+        opacity: 0.5,
+        height: "3.8rem"
+    });
+    // Activate the first eyebrow and tab content by default
+    (0, _gsap.gsap).to(eyebrows[0], {
+        opacity: 1
+    });
+    (0, _gsap.gsap).to(tabContentItems[0], {
+        opacity: 1
+    });
+    (0, _gsap.gsap).to(menuItems[0], {
+        opacity: 1,
+        height: "auto"
+    });
+    (0, _gsap.gsap).to(tabProgressWraps[0], {
+        opacity: 1,
+        duration: 0.3
+    });
+    (0, _gsap.gsap).fromTo(progressBars[0], {
+        x: "-100%"
+    }, {
+        x: "100%",
+        duration: 7,
+        repeat: -1
+    });
+    // Add click event listeners to each eyebrow
+    eyebrows.forEach((eyebrow, index)=>{
+        eyebrow.addEventListener("click", ()=>{
+            // Animate all eyebrows to opacity 0.5 except the clicked one
+            (0, _gsap.gsap).to(eyebrows, {
+                opacity: 0.5
             });
-            progressBars.forEach((progress, index)=>{
-                if (index !== activeIndex) {
-                    (0, _gsap.gsap).to(progress, {
-                        opacity: 0,
-                        duration: 0.2
-                    }); // Only animate opacity
-                    (0, _gsap.gsap).set(progress, {
-                        x: "-100%"
-                    });
-                }
+            (0, _gsap.gsap).to(eyebrow, {
+                opacity: 1
             });
-            tabProgressWrap.forEach((brow, index)=>{
-                if (index !== activeIndex) (0, _gsap.gsap).to(brow, {
-                    opacity: 0,
-                    duration: 0.3
-                });
+            // Animate all tabContentItems to opacity 0 except the corresponding one
+            (0, _gsap.gsap).to(tabContentItems, {
+                opacity: 0
             });
-            eyebrows.forEach((eyebrow, index)=>{
-                if (index !== activeIndex) (0, _gsap.gsap).to(eyebrow, {
-                    opacity: 0.4,
-                    duration: 0.3
-                });
+            (0, _gsap.gsap).to(tabContentItems[index], {
+                opacity: 1
             });
-            // Animate the active item
-            const activeItem = menuItems[activeIndex];
-            const activeProgressBar = progressBars[activeIndex];
-            const activeEyebrowWrap = tabProgressWrap[activeIndex];
-            const activeEyebrow = eyebrows[activeIndex];
-            (0, _gsap.gsap).to(activeItem, {
+            // Reset all menu items and progress bars
+            (0, _gsap.gsap).to(menuItems, {
+                opacity: 0.5,
+                height: "3.8rem"
+            });
+            (0, _gsap.gsap).to(tabProgressWraps, {
+                opacity: 0
+            });
+            (0, _gsap.gsap).killTweensOf(tabProgressWraps);
+            // Animate the active menu item and progress bar
+            (0, _gsap.gsap).to(menuItems[index], {
                 opacity: 1,
                 height: "auto",
                 duration: 0.3
             });
-            (0, _gsap.gsap).to(activeProgressBar, {
-                opacity: 1,
-                duration: 0.3
-            }); // Reveal progress bar opacity
-            (0, _gsap.gsap).to(activeProgressBar, {
-                x: "0%",
-                duration: 7,
-                ease: "linear"
-            }); // Animate x
-            (0, _gsap.gsap).to(activeEyebrowWrap, {
-                opacity: 1,
-                duration: 0.3
+            (0, _gsap.gsap).to(tabProgressWraps[index], {
+                opacity: 1
             });
-            (0, _gsap.gsap).to(activeEyebrow, {
-                opacity: 1,
-                duration: 0.3
-            }); // Highlight active eyebrow
-        }
-        // Function to reset animations after click
-        function resetAnimations() {
-            progressBars.forEach((progress)=>{
-                (0, _gsap.gsap).set(progress, {
-                    opacity: 0,
-                    x: "-100%"
-                });
-            });
-            tabProgressWrap.forEach((brow)=>{
-                (0, _gsap.gsap).set(brow, {
-                    opacity: 0
-                });
-            });
-            menuItems.forEach((item)=>{
-                (0, _gsap.gsap).set(item, {
-                    opacity: 0.4,
-                    height: "3.8rem"
-                });
-            });
-            eyebrows.forEach((eyebrow)=>{
-                (0, _gsap.gsap).set(eyebrow, {
-                    opacity: 0.4
-                });
-            });
-        }
-        // Function to stop animations
-        function stopAnimations() {
-            (0, _gsap.gsap).globalTimeline.pause();
-            clearInterval(animationInterval);
-        }
-        // Function to start animations
-        function startAnimations() {
-            (0, _gsap.gsap).globalTimeline.resume();
-            clearInterval(animationInterval);
-            animationInterval = setInterval(()=>{
-                activeIndex = (activeIndex + 1) % menuItems.length;
-                animateActiveItem();
-            }, 7000);
-        }
-        // Add hover listeners to stop animations
-        menuItems.forEach((item, index)=>{
-            item.addEventListener("mouseenter", ()=>{
-                if (index === activeIndex) stopAnimations();
-            });
-            item.addEventListener("mouseleave", ()=>{
-                if (index === activeIndex) startAnimations();
+            (0, _gsap.gsap).fromTo(progressBars[index], {
+                x: "-100%"
+            }, {
+                x: "0",
+                duration: 7
             });
         });
-        // Add click listener to switch active tab
-        menuItems.forEach((item, index)=>{
-            item.addEventListener("click", ()=>{
-                stopAnimations();
-                resetAnimations(); // Reset all animations before applying new state
-                activeIndex = index; // Set active index to the clicked item
-                animateActiveItem(); // Trigger the animation
-                startAnimations(); // Restart the interval
-            });
-        });
-        // Start the animation loop
-        animateActiveItem(); // Initial animation
-        animationInterval = setInterval(()=>{
-            activeIndex = (activeIndex + 1) % menuItems.length;
-            animateActiveItem();
-        }, 7000); // Repeat every 7 seconds
     });
+    // Automatic animation for the active menu item every 7 seconds
+    let activeIndex = 0;
+    setInterval(()=>{
+        // Reset all menu items and progress bars
+        (0, _gsap.gsap).to(menuItems, {
+            opacity: 0.5,
+            height: "3.8rem"
+        });
+        (0, _gsap.gsap).to(progressBars, {
+            opacity: 0
+        });
+        (0, _gsap.gsap).killTweensOf(tabProgressWraps);
+        // Increment active index
+        activeIndex = (activeIndex + 1) % menuItems.length;
+        // Animate the active menu item and progress bar
+        (0, _gsap.gsap).to(menuItems[activeIndex], {
+            opacity: 1,
+            height: "auto",
+            duration: 0.3
+        });
+        (0, _gsap.gsap).to(tabProgressWraps[activeIndex], {
+            opacity: 1
+        });
+        (0, _gsap.gsap).fromTo(progressBars[activeIndex], {
+            x: "-100%"
+        }, {
+            x: "0",
+            duration: 7
+        });
+    }, 7000);
 }
 
 },{"gsap":"fPSuC","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"fL9gf":[function(require,module,exports,__globalThis) {
