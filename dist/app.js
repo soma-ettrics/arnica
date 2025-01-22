@@ -7427,7 +7427,7 @@ function autoTab() {
     });
 }
 
-},{"gsap":"fPSuC","gsap/ScrollTrigger":"7wnFk","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"cIPEi":[function(require,module,exports,__globalThis) {
+},{"gsap":"fPSuC","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","gsap/ScrollTrigger":"7wnFk"}],"cIPEi":[function(require,module,exports,__globalThis) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "default", ()=>home);
@@ -7621,7 +7621,8 @@ function tabdark() {
         opacity: 0.5
     });
     (0, _gsap.gsap).set(tabContentItems, {
-        opacity: 0
+        opacity: 0,
+        y: "5%"
     });
     (0, _gsap.gsap).set(tabProgressWraps, {
         opacity: 0
@@ -7635,7 +7636,8 @@ function tabdark() {
         opacity: 1
     });
     (0, _gsap.gsap).to(tabContentItems[0], {
-        opacity: 1
+        opacity: 1,
+        y: "0%"
     });
     (0, _gsap.gsap).to(menuItems[0], {
         opacity: 1,
@@ -7648,7 +7650,8 @@ function tabdark() {
     (0, _gsap.gsap).fromTo(progressBars[0], {
         x: "-100%"
     }, {
-        x: "100%",
+        x: "0%",
+        ease: "none",
         duration: 7,
         repeat: -1
     });
@@ -7664,10 +7667,12 @@ function tabdark() {
             });
             // Animate all tabContentItems to opacity 0 except the corresponding one
             (0, _gsap.gsap).to(tabContentItems, {
-                opacity: 0
+                opacity: 0,
+                y: "5%"
             });
             (0, _gsap.gsap).to(tabContentItems[index], {
-                opacity: 1
+                opacity: 1,
+                y: "0%"
             });
             // Reset all menu items and progress bars
             (0, _gsap.gsap).to(menuItems, {
@@ -7677,7 +7682,7 @@ function tabdark() {
             (0, _gsap.gsap).to(tabProgressWraps, {
                 opacity: 0
             });
-            (0, _gsap.gsap).killTweensOf(tabProgressWraps);
+            (0, _gsap.gsap).killTweensOf(progressBars);
             // Animate the active menu item and progress bar
             (0, _gsap.gsap).to(menuItems[index], {
                 opacity: 1,
@@ -7690,8 +7695,10 @@ function tabdark() {
             (0, _gsap.gsap).fromTo(progressBars[index], {
                 x: "-100%"
             }, {
-                x: "0",
-                duration: 7
+                x: "0%",
+                ease: "none",
+                duration: 7,
+                repeat: -1
             });
         });
     });
@@ -7703,10 +7710,10 @@ function tabdark() {
             opacity: 0.5,
             height: "3.8rem"
         });
-        (0, _gsap.gsap).to(progressBars, {
+        (0, _gsap.gsap).to(tabProgressWraps, {
             opacity: 0
         });
-        (0, _gsap.gsap).killTweensOf(tabProgressWraps);
+        (0, _gsap.gsap).killTweensOf(progressBars);
         // Increment active index
         activeIndex = (activeIndex + 1) % menuItems.length;
         // Animate the active menu item and progress bar
@@ -7721,9 +7728,17 @@ function tabdark() {
         (0, _gsap.gsap).fromTo(progressBars[activeIndex], {
             x: "-100%"
         }, {
-            x: "0",
-            duration: 7
+            x: "0%",
+            duration: 7,
+            repeat: -1
         });
+        // Ensure the active menu item maintains its height and opacity for 7 seconds
+        setTimeout(()=>{
+            (0, _gsap.gsap).to(menuItems[activeIndex], {
+                height: "auto",
+                opacity: 1
+            });
+        }, 7000);
     }, 7000);
 }
 

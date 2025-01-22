@@ -10,16 +10,16 @@ export default function tabdark() {
 
     // Set initial states using GSAP
     gsap.set(eyebrows, { opacity: 0.5 });
-    gsap.set(tabContentItems, { opacity: 0 });
+    gsap.set(tabContentItems, { opacity: 0, y: "5%" });
     gsap.set(tabProgressWraps, { opacity: 0 });
     gsap.set(menuItems, { opacity: 0.5, height: "3.8rem" });
 
     // Activate the first eyebrow and tab content by default
     gsap.to(eyebrows[0], { opacity: 1 });
-    gsap.to(tabContentItems[0], { opacity: 1 });
+    gsap.to(tabContentItems[0], { opacity: 1, y: "0%" });
     gsap.to(menuItems[0], { opacity: 1, height: "auto" });
     gsap.to(tabProgressWraps[0], { opacity: 1, duration: 0.3 });
-    gsap.fromTo(progressBars[0], { x: "-100%" }, { x: "100%", duration: 7, repeat: -1 });
+    gsap.fromTo(progressBars[0], { x: "-100%" }, { x: "0%", ease: "none", duration: 7, repeat: -1 });
 
     // Add click event listeners to each eyebrow
     eyebrows.forEach((eyebrow, index) => {
@@ -29,18 +29,18 @@ export default function tabdark() {
             gsap.to(eyebrow, { opacity: 1 });
 
             // Animate all tabContentItems to opacity 0 except the corresponding one
-            gsap.to(tabContentItems, { opacity: 0 });
-            gsap.to(tabContentItems[index], { opacity: 1 });
+            gsap.to(tabContentItems, { opacity: 0, y: "5%" });
+            gsap.to(tabContentItems[index], { opacity: 1, y: "0%" });
 
             // Reset all menu items and progress bars
             gsap.to(menuItems, { opacity: 0.5, height: "3.8rem" });
             gsap.to(tabProgressWraps, { opacity: 0 });
-            gsap.killTweensOf(tabProgressWraps);
+            gsap.killTweensOf(progressBars);
 
             // Animate the active menu item and progress bar
             gsap.to(menuItems[index], { opacity: 1, height: "auto", duration: 0.3 });
             gsap.to(tabProgressWraps[index], { opacity: 1 });
-            gsap.fromTo(progressBars[index], { x: "-100%" }, { x: "0", duration: 7});
+            gsap.fromTo(progressBars[index], { x: "-100%" }, { x: "0%", ease: "none", duration: 7, repeat: -1 });
         });
     });
 
@@ -49,8 +49,8 @@ export default function tabdark() {
     setInterval(() => {
         // Reset all menu items and progress bars
         gsap.to(menuItems, { opacity: 0.5, height: "3.8rem" });
-        gsap.to(progressBars, { opacity: 0 });
-        gsap.killTweensOf(tabProgressWraps);
+        gsap.to(tabProgressWraps, { opacity: 0 });
+        gsap.killTweensOf(progressBars);
 
         // Increment active index
         activeIndex = (activeIndex + 1) % menuItems.length;
@@ -58,6 +58,11 @@ export default function tabdark() {
         // Animate the active menu item and progress bar
         gsap.to(menuItems[activeIndex], { opacity: 1, height: "auto", duration: 0.3 });
         gsap.to(tabProgressWraps[activeIndex], { opacity: 1 });
-        gsap.fromTo(progressBars[activeIndex], { x: "-100%" }, { x: "0", duration: 7 });
+        gsap.fromTo(progressBars[activeIndex], { x: "-100%" }, { x: "0%", duration: 7, repeat: -1 });
+
+        // Ensure the active menu item maintains its height and opacity for 7 seconds
+        setTimeout(() => {
+            gsap.to(menuItems[activeIndex], { height: "auto", opacity: 1 });
+        }, 7000);
     }, 7000);
 }
