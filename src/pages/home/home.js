@@ -6,5 +6,5 @@ export default function home() {
 
     stats();
     injectSvg();
-    tabdark();
+    //tabdark();
 }

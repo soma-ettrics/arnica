@@ -99,7 +99,7 @@ export default function autoTab() {
     });
 
     // Pause on hover over tab menu item
-    $tabMenu.find(".tab-hor_menu-item").hover(
+    /* $tabMenu.find(".tab-hor_menu-item").hover(
       function () {
         // Mouse enter
         isPaused = true;
@@ -117,7 +117,7 @@ export default function autoTab() {
         // Resume GSAP animation
         gsap.globalTimeline.resume();
       }
-    );
+    ); */
 
     // Pause/resume on navbar button click
     $(".w-nav-button").click(function () {

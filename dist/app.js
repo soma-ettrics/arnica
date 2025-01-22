@@ -7394,21 +7394,25 @@ function autoTab() {
             playProgressAnimation($clickedTab);
         });
         // Pause on hover over tab menu item
-        $tabMenu.find(".tab-hor_menu-item").hover(function() {
-            // Mouse enter
-            isPaused = true;
-            clearTimeout(tabTimeout);
-            // Pause GSAP animation for the hovered tab
-            const $hoveredTab = $(this).closest(".w-tab-link");
-            (0, _gsapDefault.default).globalTimeline.pause();
-        }, function() {
-            // Mouse leave
-            isPaused = false;
-            tabLoop();
-            // Resume GSAP animation
-            (0, _gsapDefault.default).globalTimeline.resume();
-        });
-        // Pause/resume on navbar button click
+        /* $tabMenu.find(".tab-hor_menu-item").hover(
+      function () {
+        // Mouse enter
+        isPaused = true;
+        clearTimeout(tabTimeout);
+
+        // Pause GSAP animation for the hovered tab
+        const $hoveredTab = $(this).closest(".w-tab-link");
+        gsap.globalTimeline.pause();
+      },
+      function () {
+        // Mouse leave
+        isPaused = false;
+        tabLoop();
+
+        // Resume GSAP animation
+        gsap.globalTimeline.resume();
+      }
+    ); */ // Pause/resume on navbar button click
         $(".w-nav-button").click(function() {
             if (isPaused) {
                 isPaused = false;
