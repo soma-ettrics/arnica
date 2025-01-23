@@ -38,7 +38,9 @@ export default function tabdark() {
             gsap.killTweensOf(progressBars);
 
             // Animate the active menu item and progress bar
-            gsap.to(menuItems[index], { opacity: 1, height: "auto", duration: 0.3 });
+            gsap.to(menuItems[index], { opacity: 1, height: "auto", duration: 0.3, onComplete: () => {
+                gsap.set(menuItems[index], { height: "auto" });
+            }});
             gsap.to(tabProgressWraps[index], { opacity: 1 });
             gsap.fromTo(progressBars[index], { x: "-100%" }, { x: "0%", ease: "none", duration: 7, repeat: -1 });
         });
@@ -56,9 +58,11 @@ export default function tabdark() {
         activeIndex = (activeIndex + 1) % menuItems.length;
 
         // Animate the active menu item and progress bar
-        gsap.to(menuItems[activeIndex], { opacity: 1, height: "auto", duration: 0.3 });
+        gsap.to(menuItems[activeIndex], { opacity: 1, height: "auto", duration: 0.3, onComplete: () => {
+            gsap.set(menuItems[activeIndex], { height: "auto" });
+        }});
         gsap.to(tabProgressWraps[activeIndex], { opacity: 1 });
-        gsap.fromTo(progressBars[activeIndex], { x: "-100%" }, { x: "0%", duration: 7, repeat: -1 });
+        gsap.fromTo(progressBars[activeIndex], { x: "-100%" }, { x: "0%", duration: 7, ease: "none", repeat: -1 });
 
         // Ensure the active menu item maintains its height and opacity for 7 seconds
         setTimeout(() => {

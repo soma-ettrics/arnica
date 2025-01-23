@@ -7449,9 +7449,9 @@ var _statsDefault = parcelHelpers.interopDefault(_stats);
 var _tabdark = require("./tabdark");
 var _tabdarkDefault = parcelHelpers.interopDefault(_tabdark);
 function home() {
-    (0, _tabdarkDefault.default)();
     (0, _statsDefault.default)();
     (0, _injectSvgDefault.default)();
+    (0, _tabdarkDefault.default)();
 }
 
 },{"./injectSvg":"2gLOp","../../global/stats":"9y0Rc","./tabdark":"8RiVW","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"2gLOp":[function(require,module,exports,__globalThis) {
@@ -7698,7 +7698,12 @@ function tabdark() {
             (0, _gsap.gsap).to(menuItems[index], {
                 opacity: 1,
                 height: "auto",
-                duration: 0.3
+                duration: 0.3,
+                onComplete: ()=>{
+                    (0, _gsap.gsap).set(menuItems[index], {
+                        height: "auto"
+                    });
+                }
             });
             (0, _gsap.gsap).to(tabProgressWraps[index], {
                 opacity: 1
@@ -7731,7 +7736,12 @@ function tabdark() {
         (0, _gsap.gsap).to(menuItems[activeIndex], {
             opacity: 1,
             height: "auto",
-            duration: 0.3
+            duration: 0.3,
+            onComplete: ()=>{
+                (0, _gsap.gsap).set(menuItems[activeIndex], {
+                    height: "auto"
+                });
+            }
         });
         (0, _gsap.gsap).to(tabProgressWraps[activeIndex], {
             opacity: 1
@@ -7741,6 +7751,7 @@ function tabdark() {
         }, {
             x: "0%",
             duration: 7,
+            ease: "none",
             repeat: -1
         });
         // Ensure the active menu item maintains its height and opacity for 7 seconds
