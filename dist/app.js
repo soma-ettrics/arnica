@@ -7734,11 +7734,10 @@ var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "default", ()=>injectSvg);
 function injectSvg() {
-    console.log('Injecting SVGs...');
     // Select all .logo_box elements
     const logoBoxes = document.querySelectorAll('.logo_box');
     if (logoBoxes.length === 0) {
-        console.error('No elements found with the class .logo_box.');
+        console.info('No elements found with the class .logo_box.');
         return;
     }
     // Loop through each .logo_box element
