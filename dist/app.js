@@ -7326,6 +7326,7 @@ function autoTab() {
             ];
             this.timeout = null;
             this.isPaused = false;
+            this.isHoverPaused = false;
             this.ANIMATION_DURATION = 7;
             this.activeAnimation = null;
             this.init();
@@ -7371,7 +7372,7 @@ function autoTab() {
             this.playProgress(nextTab);
         }
         startLoop() {
-            if (this.isPaused) return;
+            if (this.isPaused || this.isHoverPaused) return;
             // Clear any existing timeout
             if (this.timeout) {
                 clearTimeout(this.timeout);
@@ -7417,8 +7418,29 @@ function autoTab() {
         }
         setupEventListeners() {
             this.tabLinks.forEach((tab)=>{
+                // Click event
                 tab.addEventListener("click", ()=>{
                     this.forceReset(tab);
+                });
+                // Hover events for the current tab
+                tab.addEventListener("mouseenter", ()=>{
+                    if (tab.classList.contains("w--current")) {
+                        this.isHoverPaused = true;
+                        if (this.timeout) {
+                            clearTimeout(this.timeout);
+                            this.timeout = null;
+                        }
+                        if (this.activeAnimation) this.activeAnimation.pause();
+                    }
+                });
+                tab.addEventListener("mouseleave", ()=>{
+                    if (tab.classList.contains("w--current")) {
+                        this.isHoverPaused = false;
+                        if (!this.isPaused) {
+                            if (this.activeAnimation) this.activeAnimation.resume();
+                            this.startLoop();
+                        }
+                    }
                 });
             });
             const navButton = document.querySelector(".w-nav-button");
@@ -7430,7 +7452,7 @@ function autoTab() {
                         this.timeout = null;
                     }
                     if (this.activeAnimation) this.activeAnimation.pause();
-                } else {
+                } else if (!this.isHoverPaused) {
                     if (this.activeAnimation) this.activeAnimation.resume();
                     this.startLoop();
                 }

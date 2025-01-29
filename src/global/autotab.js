@@ -11,6 +11,7 @@ export default function autoTab() {
       this.tabLinks = [...this.tabMenu.querySelectorAll(".w-tab-link")];
       this.timeout = null;
       this.isPaused = false;
+      this.isHoverPaused = false;
       this.ANIMATION_DURATION = 7;
       this.activeAnimation = null;
 
@@ -65,7 +66,7 @@ export default function autoTab() {
     }
 
     startLoop() {
-      if (this.isPaused) return;
+      if (this.isPaused || this.isHoverPaused) return;
       
       // Clear any existing timeout
       if (this.timeout) {
@@ -122,8 +123,35 @@ export default function autoTab() {
 
     setupEventListeners() {
       this.tabLinks.forEach(tab => {
+        // Click event
         tab.addEventListener("click", () => {
           this.forceReset(tab);
+        });
+
+        // Hover events for the current tab
+        tab.addEventListener("mouseenter", () => {
+          if (tab.classList.contains("w--current")) {
+            this.isHoverPaused = true;
+            if (this.timeout) {
+              clearTimeout(this.timeout);
+              this.timeout = null;
+            }
+            if (this.activeAnimation) {
+              this.activeAnimation.pause();
+            }
+          }
+        });
+
+        tab.addEventListener("mouseleave", () => {
+          if (tab.classList.contains("w--current")) {
+            this.isHoverPaused = false;
+            if (!this.isPaused) {
+              if (this.activeAnimation) {
+                this.activeAnimation.resume();
+              }
+              this.startLoop();
+            }
+          }
         });
       });
 
@@ -140,10 +168,12 @@ export default function autoTab() {
               this.activeAnimation.pause();
             }
           } else {
-            if (this.activeAnimation) {
-              this.activeAnimation.resume();
+            if (!this.isHoverPaused) {
+              if (this.activeAnimation) {
+                this.activeAnimation.resume();
+              }
+              this.startLoop();
             }
-            this.startLoop();
           }
         });
       }
