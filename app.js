@@ -18,8 +18,11 @@ import nav from "./src/global/nav";
 import branch from "./src/global/branchanim";
 import logoproof from "./src/global/logoproof";
 import autotab from "./src/global/autotab";
+import injectSvg from "./src/global/injectSvg";
 
+injectSvg();
 autotab();
+
 nav();
 branch();
 logoproof();

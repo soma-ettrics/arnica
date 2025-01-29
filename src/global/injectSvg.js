@@ -1,4 +1,5 @@
 export default function injectSvg() {
+  console.log('Injecting SVGs...');
   // Select all .logo_box elements
   const logoBoxes = document.querySelectorAll('.logo_box');
 

@@ -8,81 +8,49 @@ export default function tabdark() {
   const tabMenu = document.querySelectorAll(".tab2_menu-item");
   const tabContentItem = document.querySelectorAll(".half-tab_menu-item");
 
-  // Global animation duration
-  const dur = 7;
-
   // Initial setup for tabMenu and tabContentWraps
   gsap.set(tabMenu, { opacity: 0.5 });
   gsap.set(tabContentWraps, { opacity: 0 });
-  gsap.set(tabContentItem, { opacity: 0.5, height: "3.8rem" });
-  gsap.set(tabProgressWraps, { opacity: 0 });
-  gsap.set(progressBars, { x: "-100%" });
-
-  // Activate the first tabMenu and tabContentWraps by default
   gsap.set(tabMenu[0], { opacity: 1 });
   gsap.set(tabContentWraps[0], { opacity: 1 });
 
-  // Helper function to animate tabContentItems
-  const animateTabContentItems = (contentItems) => {
-    let index = 0;
-
-    const animateNextItem = () => {
-      const currentItem = contentItems[index];
-
-      // Reset all tabContentItem elements to default states
-      gsap.set(contentItems, { opacity: 0.5, height: "3.8rem" });
-      gsap.set(tabProgressWraps, { opacity: 0 });
-      gsap.set(progressBars, { x: "-100%" });
-
-      // Activate the current item
-      gsap.to(currentItem, { opacity: 1, height: "auto", duration: 0.3, ease: "power1.out" });
-
-      // Find and animate progressWraps and progressBars within the current item
-      const progressWrap = currentItem.querySelector(".tab-hor_progress-wrap.is-dark");
-      const progressBar = progressWrap?.querySelector(".tab-hor_progress");
-
-      if (progressWrap && progressBar) {
-        gsap.to(progressWrap, { opacity: 1, duration: 0.3 });
-        gsap.fromTo(
-          progressBar,
-          { x: "-100%" },
-          {
-            x: "0%",
-            duration: dur,
-            ease: "none",
-            onComplete: () => {
-              // After animation completes, move to the next item
-              index = (index + 1) % contentItems.length; // Loop back to the first item
-              animateNextItem();
-            },
-          }
-        );
-      }
-    };
-
-    // Start animating the first item
-    animateNextItem();
-  };
+  // Initial setup for tabContentItem elements
+  gsap.set(tabContentItem, { opacity: 0.5, height: "3.8rem" });
+  const firstContentItems = tabContentWraps[0].querySelectorAll(".half-tab_menu-item");
+  gsap.set(firstContentItems[0], { opacity: 1, height: "auto" });
 
   // Add click event listeners to tabMenu items
-  tabMenu.forEach((menuItem, menuIndex) => {
+  tabMenu.forEach((menuItem, tabIndex) => {
     menuItem.addEventListener("click", () => {
-      // Reset tabMenu and tabContentWraps
+      // Reset all tabMenu items to opacity 0.5
       gsap.to(tabMenu, { opacity: 0.5, duration: 0.3 });
+
+      // Reset all tabContentWraps to opacity 0
       gsap.to(tabContentWraps, { opacity: 0, duration: 0.3 });
 
-      // Activate the clicked tabMenu and corresponding tabContentWraps
+      // Highlight the clicked tabMenu item
       gsap.to(menuItem, { opacity: 1, duration: 0.3 });
-      gsap.to(tabContentWraps[menuIndex], { opacity: 1, duration: 0.3 });
 
-      // Start the tabContentItem animation within the active tabContentWraps
-      const activeContentWrap = tabContentWraps[menuIndex];
-      const activeContentItems = activeContentWrap.querySelectorAll(".half-tab_menu-item");
-      animateTabContentItems(activeContentItems);
+      // Show the corresponding tabContentWraps
+      gsap.to(tabContentWraps[tabIndex], { opacity: 1, duration: 0.3, onComplete: () => {
+        // Start animating contents of the active tabContentWraps
+        const contentItems = tabContentWraps[tabIndex].querySelectorAll(".half-tab_menu-item");
+
+        // Reset all tabContentItem elements
+        gsap.to(tabContentItem, { opacity: 0.5, height: "3.8rem", duration: 0 });
+
+        // Animate the first tabContentItem in the active tabContentWraps
+        gsap.to(contentItems[0], {
+          opacity: 1,
+          height: "auto",
+          duration: 0.3,
+          ease: "power2.out",
+          onComplete: () => {
+            // Reset the animated tabContentItem to its initial state
+            gsap.to(contentItems[0], { opacity: 0.5, height: "3.8rem", duration: 0 });
+          },
+        });
+      }});
     });
   });
-
-  // Trigger initial animation for the first tabContentWraps
-  const initialContentItems = tabContentWraps[0].querySelectorAll(".half-tab_menu-item");
-  animateTabContentItems(initialContentItems);
 }

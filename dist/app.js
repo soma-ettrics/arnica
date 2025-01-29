@@ -616,6 +616,8 @@ var _logoproof = require("./src/global/logoproof");
 var _logoproofDefault = parcelHelpers.interopDefault(_logoproof);
 var _autotab = require("./src/global/autotab");
 var _autotabDefault = parcelHelpers.interopDefault(_autotab);
+var _injectSvg = require("./src/global/injectSvg");
+var _injectSvgDefault = parcelHelpers.interopDefault(_injectSvg);
 // Import page-specific scripts
 var _home = require("./src/pages/home/home");
 var _homeDefault = parcelHelpers.interopDefault(_home);
@@ -630,6 +632,7 @@ var _careerDefault = parcelHelpers.interopDefault(_career);
 var _integrationPage = require("./src/pages/sub-pages/integration-page");
 var _integrationPageDefault = parcelHelpers.interopDefault(_integrationPage);
 const parceled = true;
+(0, _injectSvgDefault.default)();
 (0, _autotabDefault.default)();
 (0, _navDefault.default)();
 (0, _branchanimDefault.default)();
@@ -669,7 +672,7 @@ const initializePageScripts = ()=>{
 // Execute page-specific scripts
 initializePageScripts();
 
-},{"./src/styles/style.css":"cy7Le","./src/global/nav":"9emQb","./src/global/branchanim":"vOPHW","./src/global/logoproof":"5JoIt","./src/global/autotab":"gEi0T","./src/pages/home/home":"cIPEi","./src/pages/about/about":"fL9gf","./src/pages/work/work":"9nfro","./src/pages/services/services":"gjwHc","./src/pages/career/career":"erAwr","./src/pages/sub-pages/integration-page":"aqRRp","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"cy7Le":[function() {},{}],"9emQb":[function(require,module,exports,__globalThis) {
+},{"./src/styles/style.css":"cy7Le","./src/global/nav":"9emQb","./src/global/branchanim":"vOPHW","./src/global/logoproof":"5JoIt","./src/global/autotab":"gEi0T","./src/pages/home/home":"cIPEi","./src/pages/about/about":"fL9gf","./src/pages/work/work":"9nfro","./src/pages/services/services":"gjwHc","./src/pages/career/career":"erAwr","./src/pages/sub-pages/integration-page":"aqRRp","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./src/global/injectSvg":"hKgAv"}],"cy7Le":[function() {},{}],"9emQb":[function(require,module,exports,__globalThis) {
 // jQuery test
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
@@ -7442,51 +7445,16 @@ function autoTab() {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "default", ()=>home);
-var _injectSvg = require("./injectSvg");
-var _injectSvgDefault = parcelHelpers.interopDefault(_injectSvg);
 var _stats = require("../../global/stats");
 var _statsDefault = parcelHelpers.interopDefault(_stats);
 var _tabdark = require("./tabdark");
 var _tabdarkDefault = parcelHelpers.interopDefault(_tabdark);
 function home() {
     (0, _statsDefault.default)();
-    (0, _injectSvgDefault.default)();
-    (0, _tabdarkDefault.default)();
+//tabdark();
 }
 
-},{"./injectSvg":"2gLOp","../../global/stats":"9y0Rc","./tabdark":"8RiVW","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"2gLOp":[function(require,module,exports,__globalThis) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "default", ()=>injectSvg);
-function injectSvg() {
-    // Select all .logo_box elements
-    const logoBoxes = document.querySelectorAll('.logo_box');
-    if (logoBoxes.length === 0) {
-        console.error('No elements found with the class .logo_box.');
-        return;
-    }
-    // Loop through each .logo_box element
-    logoBoxes.forEach((logoBox)=>{
-        // Find the <img> element inside .logo_box
-        const imgElement = logoBox.querySelector('img');
-        if (imgElement && imgElement.src) {
-            // Check if the image is an SVG
-            if (imgElement.src.endsWith('.svg')) // Fetch the SVG file from the img src
-            fetch(imgElement.src).then((response)=>{
-                if (!response.ok) throw new Error(`Network response was not ok: ${response.statusText}`);
-                return response.text();
-            }).then((svgCode)=>{
-                // Inject the fetched SVG code into the .logo_box div
-                logoBox.innerHTML = svgCode;
-            }).catch((error)=>{
-                console.error('Failed to fetch SVG:', error);
-            });
-            else console.log('Image is not an SVG, leaving it unchanged.');
-        } else console.error('No <img> element or src attribute found inside .logo_box.');
-    });
-}
-
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"9y0Rc":[function(require,module,exports,__globalThis) {
+},{"../../global/stats":"9y0Rc","./tabdark":"8RiVW","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"9y0Rc":[function(require,module,exports,__globalThis) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "default", ()=>stats);
@@ -7627,8 +7595,6 @@ function tabdark() {
     const tabContentWraps = document.querySelectorAll(".half-tab_content");
     const tabMenu = document.querySelectorAll(".tab2_menu-item");
     const tabContentItem = document.querySelectorAll(".half-tab_menu-item");
-    // Global animation duration
-    const dur = 7;
     // Initial setup for tabMenu and tabContentWraps
     (0, _gsap.gsap).set(tabMenu, {
         opacity: 0.5
@@ -7636,101 +7602,72 @@ function tabdark() {
     (0, _gsap.gsap).set(tabContentWraps, {
         opacity: 0
     });
-    (0, _gsap.gsap).set(tabContentItem, {
-        opacity: 0.5,
-        height: "3.8rem"
-    });
-    (0, _gsap.gsap).set(tabProgressWraps, {
-        opacity: 0
-    });
-    (0, _gsap.gsap).set(progressBars, {
-        x: "-100%"
-    });
-    // Activate the first tabMenu and tabContentWraps by default
     (0, _gsap.gsap).set(tabMenu[0], {
         opacity: 1
     });
     (0, _gsap.gsap).set(tabContentWraps[0], {
         opacity: 1
     });
-    // Helper function to animate tabContentItems
-    const animateTabContentItems = (contentItems)=>{
-        let index = 0;
-        const animateNextItem = ()=>{
-            const currentItem = contentItems[index];
-            // Reset all tabContentItem elements to default states
-            (0, _gsap.gsap).set(contentItems, {
-                opacity: 0.5,
-                height: "3.8rem"
-            });
-            (0, _gsap.gsap).set(tabProgressWraps, {
-                opacity: 0
-            });
-            (0, _gsap.gsap).set(progressBars, {
-                x: "-100%"
-            });
-            // Activate the current item
-            (0, _gsap.gsap).to(currentItem, {
-                opacity: 1,
-                height: "auto",
-                duration: 0.3,
-                ease: "power1.out"
-            });
-            // Find and animate progressWraps and progressBars within the current item
-            const progressWrap = currentItem.querySelector(".tab-hor_progress-wrap.is-dark");
-            const progressBar = progressWrap?.querySelector(".tab-hor_progress");
-            if (progressWrap && progressBar) {
-                (0, _gsap.gsap).to(progressWrap, {
-                    opacity: 1,
-                    duration: 0.3
-                });
-                (0, _gsap.gsap).fromTo(progressBar, {
-                    x: "-100%"
-                }, {
-                    x: "0%",
-                    duration: dur,
-                    ease: "none",
-                    onComplete: ()=>{
-                        // After animation completes, move to the next item
-                        index = (index + 1) % contentItems.length; // Loop back to the first item
-                        animateNextItem();
-                    }
-                });
-            }
-        };
-        // Start animating the first item
-        animateNextItem();
-    };
+    // Initial setup for tabContentItem elements
+    (0, _gsap.gsap).set(tabContentItem, {
+        opacity: 0.5,
+        height: "3.8rem"
+    });
+    const firstContentItems = tabContentWraps[0].querySelectorAll(".half-tab_menu-item");
+    (0, _gsap.gsap).set(firstContentItems[0], {
+        opacity: 1,
+        height: "auto"
+    });
     // Add click event listeners to tabMenu items
-    tabMenu.forEach((menuItem, menuIndex)=>{
+    tabMenu.forEach((menuItem, tabIndex)=>{
         menuItem.addEventListener("click", ()=>{
-            // Reset tabMenu and tabContentWraps
+            // Reset all tabMenu items to opacity 0.5
             (0, _gsap.gsap).to(tabMenu, {
                 opacity: 0.5,
                 duration: 0.3
             });
+            // Reset all tabContentWraps to opacity 0
             (0, _gsap.gsap).to(tabContentWraps, {
                 opacity: 0,
                 duration: 0.3
             });
-            // Activate the clicked tabMenu and corresponding tabContentWraps
+            // Highlight the clicked tabMenu item
             (0, _gsap.gsap).to(menuItem, {
                 opacity: 1,
                 duration: 0.3
             });
-            (0, _gsap.gsap).to(tabContentWraps[menuIndex], {
+            // Show the corresponding tabContentWraps
+            (0, _gsap.gsap).to(tabContentWraps[tabIndex], {
                 opacity: 1,
-                duration: 0.3
+                duration: 0.3,
+                onComplete: ()=>{
+                    // Start animating contents of the active tabContentWraps
+                    const contentItems = tabContentWraps[tabIndex].querySelectorAll(".half-tab_menu-item");
+                    // Reset all tabContentItem elements
+                    (0, _gsap.gsap).to(tabContentItem, {
+                        opacity: 0.5,
+                        height: "3.8rem",
+                        duration: 0
+                    });
+                    // Animate the first tabContentItem in the active tabContentWraps
+                    (0, _gsap.gsap).to(contentItems[0], {
+                        opacity: 1,
+                        height: "auto",
+                        duration: 0.3,
+                        ease: "power2.out",
+                        onComplete: ()=>{
+                            // Reset the animated tabContentItem to its initial state
+                            (0, _gsap.gsap).to(contentItems[0], {
+                                opacity: 0.5,
+                                height: "3.8rem",
+                                duration: 0
+                            });
+                        }
+                    });
+                }
             });
-            // Start the tabContentItem animation within the active tabContentWraps
-            const activeContentWrap = tabContentWraps[menuIndex];
-            const activeContentItems = activeContentWrap.querySelectorAll(".half-tab_menu-item");
-            animateTabContentItems(activeContentItems);
         });
     });
-    // Trigger initial animation for the first tabContentWraps
-    const initialContentItems = tabContentWraps[0].querySelectorAll(".half-tab_menu-item");
-    animateTabContentItems(initialContentItems);
 }
 
 },{"gsap":"fPSuC","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"fL9gf":[function(require,module,exports,__globalThis) {
@@ -7770,6 +7707,39 @@ function integration() {
     (0, _autotabDefault.default)();
 }
 
-},{"../../global/branchanim":"vOPHW","../../global/autotab":"gEi0T","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}]},["jQqog","igcvL"], "igcvL", "parcelRequire94c2")
+},{"../../global/branchanim":"vOPHW","../../global/autotab":"gEi0T","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"hKgAv":[function(require,module,exports,__globalThis) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "default", ()=>injectSvg);
+function injectSvg() {
+    console.log('Injecting SVGs...');
+    // Select all .logo_box elements
+    const logoBoxes = document.querySelectorAll('.logo_box');
+    if (logoBoxes.length === 0) {
+        console.error('No elements found with the class .logo_box.');
+        return;
+    }
+    // Loop through each .logo_box element
+    logoBoxes.forEach((logoBox)=>{
+        // Find the <img> element inside .logo_box
+        const imgElement = logoBox.querySelector('img');
+        if (imgElement && imgElement.src) {
+            // Check if the image is an SVG
+            if (imgElement.src.endsWith('.svg')) // Fetch the SVG file from the img src
+            fetch(imgElement.src).then((response)=>{
+                if (!response.ok) throw new Error(`Network response was not ok: ${response.statusText}`);
+                return response.text();
+            }).then((svgCode)=>{
+                // Inject the fetched SVG code into the .logo_box div
+                logoBox.innerHTML = svgCode;
+            }).catch((error)=>{
+                console.error('Failed to fetch SVG:', error);
+            });
+            else console.log('Image is not an SVG, leaving it unchanged.');
+        } else console.error('No <img> element or src attribute found inside .logo_box.');
+    });
+}
+
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}]},["jQqog","igcvL"], "igcvL", "parcelRequire94c2")
 
 //# sourceMappingURL=app.js.map
