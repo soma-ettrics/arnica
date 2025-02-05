@@ -1,1 +1,0 @@
-// Everything in the `public` folder will be copied into the `dist` folder during build
