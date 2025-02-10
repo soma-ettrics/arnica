@@ -1,6 +1,7 @@
+/*
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-/* import { DrawSVGPlugin } from "gsap/DrawSVGPlugin";
+import { DrawSVGPlugin } from "gsap/DrawSVGPlugin";
 
 export default function branch() {
     gsap.registerPlugin(ScrollTrigger, DrawSVGPlugin);

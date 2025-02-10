@@ -15,16 +15,15 @@ import "./src/styles/style.css";
 
 // Import global scripts
 import nav from "./src/global/nav";
-import branch from "./src/global/branchanim";
+// import branch from "./src/global/branchanim";
 import logoproof from "./src/global/logoproof";
 import autotab from "./src/global/autotab";
 import injectSvg from "./src/global/injectSvg";
 
 injectSvg();
 autotab();
-
 nav();
-branch();
+//branch();
 logoproof();
 
 // Import page-specific scripts
