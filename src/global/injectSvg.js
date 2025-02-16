@@ -3,7 +3,6 @@ export default function injectSvg() {
   const logoBoxes = document.querySelectorAll('.logo_box');
 
   if (logoBoxes.length === 0) {
-    console.info('No elements found with the class .logo_box.');
     return;
   }
 
